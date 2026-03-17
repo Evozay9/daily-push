@@ -730,94 +730,115 @@
 
 <!-- ═══ WAVE ANIMATION JS ═══ -->
 <script>
-  const canvas = document.getElementById('waveCanvas');
-  const ctx = canvas.getContext('2d');
+  (function() {
+    const canvas = document.getElementById('waveCanvas');
+    const ctx = canvas.getContext('2d');
+    let amp = 50, freq = 3, phase = 0, raf;
 
-  // 用逻辑像素尺寸（CSS尺寸）来绘图，避免手机DPI缩放问题
-  let logicW = 760, logicH = 160;
-  let amp = 50, freq = 3, phase = 0, raf;
-
-  function resizeCanvas() {
-    const rect = canvas.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-    logicW = rect.width || 760;
-    logicH = 160;
-    // 物理像素
-    canvas.width = Math.round(logicW * dpr);
-    canvas.height = Math.round(logicH * dpr);
-    // 让CSS尺寸保持不变
-    canvas.style.width = logicW + 'px';
-    canvas.style.height = logicH + 'px';
-    // 缩放到物理像素
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-
-  function drawWave() {
-    const W = logicW, H = logicH;
-    ctx.clearRect(0, 0, W, H);
-
-    // BG grid
-    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-    ctx.lineWidth = 1;
-    for (let x = 0; x <= W; x += 60) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-    }
-    for (let y = 0; y <= H; y += 40) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      const cssW = rect.width || 760;
+      const cssH = 160;
+      const dpr = window.devicePixelRatio || 1;
+      
+      // 设置物理像素
+      canvas.width = Math.floor(cssW * dpr);
+      canvas.height = Math.floor(cssH * dpr);
+      
+      // 保持CSS尺寸
+      canvas.style.width = cssW + 'px';
+      canvas.style.height = cssH + 'px';
+      
+      // 缩放坐标系
+      ctx.scale(dpr, dpr);
+      
+      return { w: cssW, h: cssH };
     }
 
-    // Centre line
-    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-    ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(0, H/2); ctx.lineTo(W, H/2); ctx.stroke();
+    let dims = resizeCanvas();
 
-    // 振幅按画布高度比例换算，手机/PC都正确显示
-    const drawAmp = (amp / 75) * (H / 2 - 10);
+    function drawWave() {
+      const W = dims.w, H = dims.h;
+      ctx.clearRect(0, 0, W, H);
 
-    // Glow wave
-    const gradient = ctx.createLinearGradient(0, 0, W, 0);
-    gradient.addColorStop(0,   'rgba(124,92,252,0.8)');
-    gradient.addColorStop(0.5, 'rgba(252,92,125,0.9)');
-    gradient.addColorStop(1,   'rgba(92,248,216,0.8)');
+      // BG grid
+      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+      ctx.lineWidth = 1;
+      const gridX = W / 12;
+      const gridY = H / 4;
+      for (let x = 0; x <= W; x += gridX) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+      }
+      for (let y = 0; y <= H; y += gridY) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      }
 
-    ctx.shadowColor = 'rgba(124,92,252,0.6)';
-    ctx.shadowBlur = 12;
-    ctx.strokeStyle = gradient;
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    for (let x = 0; x <= W; x++) {
-      const t = (x / W) * Math.PI * 2 * freq + phase;
-      const y = H/2 + Math.sin(t) * drawAmp;
-      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      // Centre line
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0, H/2); ctx.lineTo(W, H/2); ctx.stroke();
+
+      // 振幅映射到画布高度（留出边距）
+      const maxAmp = H/2 - 15;
+      const drawAmp = (amp / 75) * maxAmp;
+
+      // 画波形 - 多层线条模拟发光效果（iOS Safari兼容）
+      const colors = [
+        'rgba(124,92,252,0.15)',  // 外层
+        'rgba(124,92,252,0.3)',
+        'rgba(124,92,252,0.6)',   // 中层
+        'rgba(200,150,255,0.9)'   // 核心
+      ];
+      const widths = [8, 5, 3, 1.5];
+
+      for (let i = 0; i < colors.length; i++) {
+        ctx.strokeStyle = colors[i];
+        ctx.lineWidth = widths[i];
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        for (let x = 0; x <= W; x += 2) {
+          const t = (x / W) * Math.PI * 2 * freq + phase;
+          const y = H/2 + Math.sin(t) * drawAmp;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+
+      phase += 0.04;
+      raf = requestAnimationFrame(drawWave);
     }
-    ctx.stroke();
-    ctx.shadowBlur = 0;
 
-    phase += 0.03;
-    raf = requestAnimationFrame(drawWave);
-  }
+    // Sliders - 同时更新数值和变量
+    const ampSlider = document.getElementById('ampSlider');
+    const freqSlider = document.getElementById('freqSlider');
+    const ampVal = document.getElementById('ampVal');
+    const freqVal = document.getElementById('freqVal');
 
-  // Sliders
-  document.getElementById('ampSlider').addEventListener('input', function() {
-    amp = +this.value;
-    document.getElementById('ampVal').textContent = this.value;
-  });
-  document.getElementById('freqSlider').addEventListener('input', function() {
-    freq = +this.value;
-    document.getElementById('freqVal').textContent = (+this.value).toFixed(1);
-  });
+    ampSlider.addEventListener('input', function(e) {
+      amp = parseFloat(e.target.value);
+      ampVal.textContent = amp;
+    });
 
-  window.addEventListener('resize', () => {
-    cancelAnimationFrame(raf);
-    resizeCanvas();
+    freqSlider.addEventListener('input', function(e) {
+      freq = parseFloat(e.target.value);
+      freqVal.textContent = freq.toFixed(1);
+    });
+
+    // 触摸设备优化：防止滑动时页面滚动
+    ampSlider.addEventListener('touchstart', function(e) { e.stopPropagation(); }, {passive: true});
+    freqSlider.addEventListener('touchstart', function(e) { e.stopPropagation(); }, {passive: true});
+
+    window.addEventListener('resize', function() {
+      cancelAnimationFrame(raf);
+      dims = resizeCanvas();
+      drawWave();
+    });
+
+    // 启动
     drawWave();
-  });
-
-  // 等DOM渲染完毕再初始化，确保getBoundingClientRect拿到真实宽度
-  requestAnimationFrame(() => {
-    resizeCanvas();
-    drawWave();
-  });
+  })();
 </script>
 </body>
 </html>
