@@ -2,15 +2,9 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
   <title>音频小知识 · 第01期 · 声音是什么？</title>
   <style>
-    /*
-     * 响应式排版体系：
-     * - 所有字号使用 rem（跟随系统/浏览器字体缩放）
-     * - 间距使用 em / rem，随字号同步放大
-     * - 只有少量装饰性元素保留 px
-     */
     :root {
       --bg: #0f0f14;
       --card: #1a1a24;
@@ -21,32 +15,22 @@
       --text: #e8e8f0;
       --muted: #8888aa;
       --border: #2e2e42;
-
-      /* 基准字号（跟随系统） */
-      font-size: 16px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html {
-      /* 让 rem 完全跟随浏览器/系统字体设置 */
-      font-size: 100%;
-    }
 
     body {
       font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      padding: 0 0 3.75rem;
-      /* 防止横向溢出 */
-      overflow-x: hidden;
+      padding: 0 0 60px;
     }
 
     /* ── Hero ── */
     .hero {
       background: linear-gradient(135deg, #1a0a2e 0%, #0d1a2e 50%, #0a2020 100%);
-      padding: clamp(2rem, 8vw, 3.75rem) 1.5rem clamp(1.5rem, 6vw, 3.125rem);
+      padding: 60px 24px 50px;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -54,10 +38,10 @@
     .hero::before {
       content: '';
       position: absolute;
-      width: 31.25rem; height: 31.25rem;
+      width: 500px; height: 500px;
       border-radius: 50%;
       background: radial-gradient(circle, rgba(124,92,252,0.15) 0%, transparent 70%);
-      top: -6.25rem; left: 50%;
+      top: -100px; left: 50%;
       transform: translateX(-50%);
       pointer-events: none;
     }
@@ -66,61 +50,61 @@
       background: rgba(124,92,252,0.2);
       border: 1px solid rgba(124,92,252,0.5);
       color: #a98bff;
-      font-size: 0.75rem;
-      letter-spacing: 0.125rem;
-      padding: 0.25rem 0.875rem;
-      border-radius: 1.25rem;
-      margin-bottom: 1.25rem;
+      font-size: 12px;
+      letter-spacing: 2px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
       text-transform: uppercase;
     }
     .hero h1 {
-      font-size: clamp(1.75rem, 7vw, 3.25rem);
+      font-size: clamp(28px, 6vw, 52px);
       font-weight: 800;
       line-height: 1.2;
-      margin-bottom: 1rem;
+      margin-bottom: 16px;
       background: linear-gradient(90deg, #a98bff, #fc5c7d, #5cf8d8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     .hero .subtitle {
-      font-size: clamp(0.875rem, 2.5vw, 1rem);
+      font-size: 16px;
       color: var(--muted);
-      max-width: 32.5rem;
+      max-width: 520px;
       margin: 0 auto;
       line-height: 1.7;
     }
     .episode-badge {
       position: absolute;
-      top: 1.5rem; right: 1.5rem;
+      top: 24px; right: 24px;
       background: rgba(255,255,255,0.07);
       border: 1px solid var(--border);
-      padding: 0.375rem 0.875rem;
-      border-radius: 0.5rem;
-      font-size: 0.8125rem;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 13px;
       color: var(--muted);
     }
 
     /* ── Layout ── */
     .container {
-      max-width: 50rem;
+      max-width: 800px;
       margin: 0 auto;
-      padding: 0 1.25rem;
+      padding: 0 20px;
     }
 
     /* ── Section ── */
     .section {
-      margin-top: 2.5rem;
+      margin-top: 40px;
     }
     .section-label {
-      font-size: 0.6875rem;
-      letter-spacing: 0.1875rem;
+      font-size: 11px;
+      letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 0.625rem;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 8px;
     }
     .section-label::after {
       content: '';
@@ -131,30 +115,30 @@
     .card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 1rem;
-      padding: 1.75rem 1.5rem;
-      margin-bottom: 1rem;
+      border-radius: 16px;
+      padding: 28px 24px;
+      margin-bottom: 16px;
     }
     .card h2 {
-      font-size: clamp(1rem, 3vw, 1.25rem);
-      margin-bottom: 0.875rem;
+      font-size: 20px;
+      margin-bottom: 14px;
       color: #fff;
     }
     .card p {
-      font-size: clamp(0.875rem, 2.5vw, 0.9375rem);
+      font-size: 15px;
       line-height: 1.85;
       color: #c8c8dc;
     }
-    .card p + p { margin-top: 0.75rem; }
+    .card p + p { margin-top: 12px; }
 
     /* ── Analogy highlight ── */
     .analogy {
       background: linear-gradient(135deg, rgba(124,92,252,0.12), rgba(92,248,216,0.08));
       border-left: 3px solid var(--accent);
-      border-radius: 0 0.75rem 0.75rem 0;
-      padding: 1rem 1.25rem;
-      margin: 1rem 0;
-      font-size: clamp(0.875rem, 2.5vw, 0.9375rem);
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-size: 15px;
       line-height: 1.8;
       color: #d8d8f0;
     }
@@ -166,8 +150,8 @@
       background: rgba(252,92,125,0.15);
       border: 1px solid rgba(252,92,125,0.3);
       color: #ff8fab;
-      padding: 0.0625rem 0.5rem;
-      border-radius: 0.375rem;
+      padding: 1px 8px;
+      border-radius: 6px;
       font-size: 0.9em;
     }
     .kw2 {
@@ -175,8 +159,8 @@
       background: rgba(92,248,216,0.12);
       border: 1px solid rgba(92,248,216,0.25);
       color: #5cf8d8;
-      padding: 0.0625rem 0.5rem;
-      border-radius: 0.375rem;
+      padding: 1px 8px;
+      border-radius: 6px;
       font-size: 0.9em;
     }
 
@@ -184,9 +168,9 @@
     .diagram-wrap {
       background: var(--card2);
       border: 1px solid var(--border);
-      border-radius: 0.875rem;
-      padding: 1.5rem;
-      margin: 1.25rem 0;
+      border-radius: 14px;
+      padding: 24px;
+      margin: 20px 0;
       overflow: hidden;
     }
     .diagram-wrap svg {
@@ -196,84 +180,79 @@
     }
     .diagram-caption {
       text-align: center;
-      font-size: clamp(0.6875rem, 2vw, 0.75rem);
+      font-size: 12px;
       color: var(--muted);
-      margin-top: 0.75rem;
-      letter-spacing: 0.03125rem;
+      margin-top: 12px;
+      letter-spacing: 0.5px;
     }
 
     /* ── 3-column info boxes ── */
     .info-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(11.25rem, 100%), 1fr));
-      gap: 0.875rem;
-      margin-top: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
     }
     .info-box {
       background: var(--card2);
       border: 1px solid var(--border);
-      border-radius: 0.75rem;
-      padding: 1.125rem 1rem;
+      border-radius: 12px;
+      padding: 18px 16px;
       text-align: center;
     }
-    .info-box .icon { font-size: 1.75rem; margin-bottom: 0.5rem; }
-    .info-box .label { font-size: clamp(0.75rem, 2vw, 0.8125rem); color: var(--muted); margin-bottom: 0.375rem; }
-    .info-box .value { font-size: clamp(0.9375rem, 2.5vw, 1.0625rem); font-weight: 700; color: #fff; }
-    .info-box .desc { font-size: clamp(0.6875rem, 1.8vw, 0.75rem); color: var(--muted); margin-top: 0.25rem; line-height: 1.5; }
+    .info-box .icon { font-size: 28px; margin-bottom: 8px; }
+    .info-box .label { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    .info-box .value { font-size: 17px; font-weight: 700; color: #fff; }
+    .info-box .desc { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
 
     /* ── Wave illustration controls ── */
     .wave-container {
       background: var(--card2);
       border: 1px solid var(--border);
-      border-radius: 0.875rem;
-      padding: 1.5rem 1.25rem 1.25rem;
-      margin: 1.25rem 0;
+      border-radius: 14px;
+      padding: 24px 20px 20px;
+      margin: 20px 0;
     }
     .wave-title {
-      font-size: clamp(0.75rem, 2vw, 0.8125rem);
+      font-size: 13px;
       color: var(--muted);
-      margin-bottom: 0.875rem;
+      margin-bottom: 14px;
       text-align: center;
-      letter-spacing: 0.0625rem;
+      letter-spacing: 1px;
     }
     canvas#waveCanvas {
       display: block;
       width: 100%;
-      border-radius: 0.5rem;
+      border-radius: 8px;
       background: #12121c;
     }
     .wave-labels {
       display: flex;
       justify-content: space-between;
-      margin-top: 0.625rem;
+      margin-top: 10px;
     }
     .wave-labels span {
-      font-size: clamp(0.6875rem, 1.8vw, 0.6875rem);
+      font-size: 11px;
       color: var(--muted);
     }
     .slider-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-top: 1rem;
+      gap: 16px;
+      margin-top: 16px;
     }
     .slider-group label {
-      font-size: clamp(0.75rem, 2vw, 0.8125rem);
+      font-size: 12px;
       color: var(--muted);
       display: block;
-      margin-bottom: 0.5rem;
-      /* 让 label 内文字换行友好 */
-      line-height: 1.5;
+      margin-bottom: 6px;
     }
     .slider-group input[type=range] {
       width: 100%;
       accent-color: var(--accent);
-      /* 手机上更容易触摸 */
-      height: 1.5rem;
-      cursor: pointer;
     }
     .slider-val {
-      font-size: clamp(0.8125rem, 2vw, 0.8125rem);
+      font-size: 13px;
       color: var(--accent3);
       font-weight: 600;
     }
@@ -284,27 +263,27 @@
     }
     .step-item {
       display: flex;
-      gap: 1rem;
-      margin-bottom: 1.25rem;
+      gap: 16px;
+      margin-bottom: 20px;
       align-items: flex-start;
     }
     .step-num {
       counter-increment: step;
       flex-shrink: 0;
-      width: 2.25rem; height: 2.25rem;
+      width: 36px; height: 36px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       display: flex; align-items: center; justify-content: center;
       font-weight: 800;
-      font-size: clamp(0.75rem, 2vw, 0.875rem);
+      font-size: 14px;
     }
     .step-content h3 {
-      font-size: clamp(0.9375rem, 2.5vw, 1rem);
+      font-size: 16px;
       color: #fff;
-      margin-bottom: 0.375rem;
+      margin-bottom: 6px;
     }
     .step-content p {
-      font-size: clamp(0.8125rem, 2.2vw, 0.875rem);
+      font-size: 14px;
       color: #aaaabf;
       line-height: 1.75;
     }
@@ -313,50 +292,43 @@
     .pill-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.625rem;
-      margin-top: 1rem;
+      gap: 10px;
+      margin-top: 16px;
     }
     .pill {
       background: rgba(124,92,252,0.15);
       border: 1px solid rgba(124,92,252,0.3);
-      padding: 0.375rem 1rem;
-      border-radius: 1.25rem;
-      font-size: clamp(0.75rem, 2vw, 0.8125rem);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
       color: #b0a0ff;
     }
 
     /* ── Footer ── */
     .footer {
       text-align: center;
-      margin-top: 3.75rem;
-      padding-top: 1.875rem;
+      margin-top: 60px;
+      padding-top: 30px;
       border-top: 1px solid var(--border);
       color: var(--muted);
-      font-size: clamp(0.75rem, 2vw, 0.8125rem);
+      font-size: 13px;
       line-height: 2;
     }
     .next-hint {
       display: inline-block;
-      margin-top: 1rem;
+      margin-top: 16px;
       background: rgba(92,248,216,0.1);
       border: 1px solid rgba(92,248,216,0.25);
       color: #5cf8d8;
-      padding: 0.5rem 1.25rem;
-      border-radius: 1.25rem;
-      font-size: clamp(0.75rem, 2vw, 0.8125rem);
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 13px;
     }
 
     /* ── Responsive ── */
-    @media (max-width: 30rem) {
-      .card { padding: 1.25rem 1rem; }
+    @media (max-width: 480px) {
+      .card { padding: 20px 16px; }
       .slider-row { grid-template-columns: 1fr; }
-      .episode-badge { font-size: 0.6875rem; padding: 0.25rem 0.625rem; top: 1rem; right: 1rem; }
-      .diagram-wrap { padding: 1rem 0.75rem; }
-    }
-
-    /* 支持系统大字体（无障碍） */
-    @media (prefers-reduced-motion: reduce) {
-      * { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
