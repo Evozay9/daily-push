@@ -732,20 +732,38 @@
 <script>
   const canvas = document.getElementById('waveCanvas');
   const ctx = canvas.getContext('2d');
+
+  // 用逻辑像素尺寸（CSS尺寸）来绘图，避免手机DPI缩放问题
+  let logicW = 760, logicH = 160;
   let amp = 50, freq = 3, phase = 0, raf;
 
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    logicW = rect.width || 760;
+    logicH = 160;
+    // 物理像素
+    canvas.width = Math.round(logicW * dpr);
+    canvas.height = Math.round(logicH * dpr);
+    // 让CSS尺寸保持不变
+    canvas.style.width = logicW + 'px';
+    canvas.style.height = logicH + 'px';
+    // 缩放到物理像素
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
   function drawWave() {
-    const W = canvas.width, H = canvas.height;
+    const W = logicW, H = logicH;
     ctx.clearRect(0, 0, W, H);
 
     // BG grid
     ctx.strokeStyle = 'rgba(255,255,255,0.04)';
     ctx.lineWidth = 1;
     for (let x = 0; x <= W; x += 60) {
-      ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
     }
     for (let y = 0; y <= H; y += 40) {
-      ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
     }
 
     // Centre line
@@ -753,11 +771,14 @@
     ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(0, H/2); ctx.lineTo(W, H/2); ctx.stroke();
 
+    // 振幅按画布高度比例换算，手机/PC都正确显示
+    const drawAmp = (amp / 75) * (H / 2 - 10);
+
     // Glow wave
     const gradient = ctx.createLinearGradient(0, 0, W, 0);
-    gradient.addColorStop(0, 'rgba(124,92,252,0.8)');
+    gradient.addColorStop(0,   'rgba(124,92,252,0.8)');
     gradient.addColorStop(0.5, 'rgba(252,92,125,0.9)');
-    gradient.addColorStop(1, 'rgba(92,248,216,0.8)');
+    gradient.addColorStop(1,   'rgba(92,248,216,0.8)');
 
     ctx.shadowColor = 'rgba(124,92,252,0.6)';
     ctx.shadowBlur = 12;
@@ -766,7 +787,7 @@
     ctx.beginPath();
     for (let x = 0; x <= W; x++) {
       const t = (x / W) * Math.PI * 2 * freq + phase;
-      const y = H/2 + Math.sin(t) * amp;
+      const y = H/2 + Math.sin(t) * drawAmp;
       x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     }
     ctx.stroke();
@@ -774,13 +795,6 @@
 
     phase += 0.03;
     raf = requestAnimationFrame(drawWave);
-  }
-
-  function resizeCanvas() {
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * window.devicePixelRatio || rect.width;
-    canvas.height = 160 * (window.devicePixelRatio || 1);
-    ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
   }
 
   // Sliders
@@ -799,8 +813,11 @@
     drawWave();
   });
 
-  resizeCanvas();
-  drawWave();
+  // 等DOM渲染完毕再初始化，确保getBoundingClientRect拿到真实宽度
+  requestAnimationFrame(() => {
+    resizeCanvas();
+    drawWave();
+  });
 </script>
 </body>
 </html>
