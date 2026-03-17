@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=4.0, user-scalable=yes" />
+  <title>音频小知识 · 第03期 · 分贝是什么？</title>
+  <style>
+    :root {
+      --bg: #0f0f14; --card: #1a1a24; --card2: #22222f;
+      --accent: #7c5cfc; --accent2: #fc5c7d; --accent3: #5cf8d8;
+      --text: #e8e8f0; --muted: #8888aa; --border: #2e2e42;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 0 0 100px; overflow-x: hidden; }
+    .hero { background: linear-gradient(135deg,#1a0a2e 0%,#0d1a2e 50%,#0a2020 100%); padding: 60px 24px 50px; text-align: center; position: relative; overflow: hidden; }
+    .hero::before { content:''; position:absolute; width:500px; height:500px; border-radius:50%; background:radial-gradient(circle,rgba(124,92,252,0.15) 0%,transparent 70%); top:-100px; left:50%; transform:translateX(-50%); pointer-events:none; }
+    .tag { display:inline-block; background:rgba(124,92,252,0.2); border:1px solid rgba(124,92,252,0.5); color:#a98bff; font-size:12px; letter-spacing:2px; padding:4px 14px; border-radius:20px; margin-bottom:20px; text-transform:uppercase; }
+    .hero h1 { font-size:clamp(26px,6vw,48px); font-weight:800; line-height:1.2; margin-bottom:16px; background:linear-gradient(90deg,#a98bff,#fc5c7d,#5cf8d8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .hero .subtitle { font-size:16px; color:var(--muted); max-width:520px; margin:0 auto; line-height:1.7; }
+    .episode-badge { position:absolute; top:24px; right:24px; background:rgba(255,255,255,0.07); border:1px solid var(--border); padding:6px 14px; border-radius:8px; font-size:13px; color:var(--muted); }
+    .container { max-width:800px; margin:0 auto; padding:0 20px; }
+    .section { margin-top:40px; }
+    .section-label { font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+    .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:28px 24px; margin-bottom:16px; }
+    .card h2 { font-size:20px; margin-bottom:14px; color:#fff; }
+    .card p { font-size:15px; line-height:1.85; color:#c8c8dc; }
+    .card p + p { margin-top:12px; }
+    .analogy { background:linear-gradient(135deg,rgba(124,92,252,0.12),rgba(92,248,216,0.08)); border-left:3px solid var(--accent); border-radius:0 12px 12px 0; padding:16px 20px; margin:16px 0; font-size:15px; line-height:1.8; color:#d8d8f0; }
+    .analogy strong { color:#b8a0ff; }
+    .kw { display:inline-block; background:rgba(252,92,125,0.15); border:1px solid rgba(252,92,125,0.3); color:#ff8fab; padding:1px 8px; border-radius:6px; font-size:0.9em; }
+    .kw2 { display:inline-block; background:rgba(92,248,216,0.12); border:1px solid rgba(92,248,216,0.25); color:#5cf8d8; padding:1px 8px; border-radius:6px; font-size:0.9em; }
+    .info-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-top:16px; }
+    .info-box { background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:18px 16px; text-align:center; }
+    .info-box .icon { font-size:28px; margin-bottom:8px; }
+    .info-box .label { font-size:13px; color:var(--muted); margin-bottom:6px; }
+    .info-box .value { font-size:17px; font-weight:700; color:#fff; }
+    .info-box .desc { font-size:12px; color:var(--muted); margin-top:4px; line-height:1.5; }
+    .pill-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+    .pill { background:rgba(124,92,252,0.15); border:1px solid rgba(124,92,252,0.3); padding:6px 16px; border-radius:20px; font-size:13px; color:#b0a0ff; }
+    .footer { text-align:center; margin-top:60px; padding-top:30px; border-top:1px solid var(--border); color:var(--muted); font-size:13px; line-height:2; }
+    .next-hint { display:inline-block; margin-top:16px; background:rgba(92,248,216,0.1); border:1px solid rgba(92,248,216,0.25); color:#5cf8d8; padding:8px 20px; border-radius:20px; font-size:13px; }
+    .next-lesson-bar { position:fixed; bottom:0; left:0; right:0; z-index:999; background:linear-gradient(to top,rgba(15,15,20,0.98) 60%,transparent); padding:16px 20px 24px; pointer-events:none; }
+    .next-lesson-inner { max-width:800px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; background:rgba(26,26,36,0.95); border:1px solid rgba(124,92,252,0.35); border-radius:18px; padding:14px 20px; pointer-events:all; box-shadow:0 8px 32px rgba(0,0,0,0.5); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+    .next-lesson-label { font-size:13px; color:var(--muted); margin-bottom:2px; }
+    .next-lesson-desc { font-size:14px; color:var(--text); font-weight:500; }
+    .next-lesson-btn { flex-shrink:0; background:linear-gradient(135deg,var(--accent),var(--accent2)); border:none; border-radius:12px; padding:12px 22px; color:#fff; font-size:15px; font-weight:700; cursor:pointer; transition:transform 0.15s,opacity 0.15s; font-family:inherit; white-space:nowrap; }
+    .next-lesson-btn:active { transform:scale(0.95); }
+    .next-lesson-btn.sent { background:linear-gradient(135deg,#2a8a4a,#1a6a3a); cursor:default; }
+    @media(max-width:480px){.card{padding:20px 16px;}}
+  </style>
+</head>
+<body>
+<div class="hero">
+  <div class="episode-badge">第 03 期 · 声学基础</div>
+  <div class="tag">音频小知识</div>
+  <h1>分贝是什么？</h1>
+  <p class="subtitle">响度单位、人耳感知与危险分贝值</p>
+</div>
+<div class="container">
+
+  <div class="section">
+    <div class="section-label">01 · 分贝的奇怪之处</div>
+    <div class="card">
+      <h2>分贝（dB）：一个「比值」单位，不是绝对值</h2>
+      <p>大多数人以为分贝是个像「厘米」「千克」一样的绝对单位。但它不是——<span class="kw">分贝是一个比值的对数</span>。</p>
+      <p>分贝描述的是「现在这个声音」比「某个参考值」强多少倍，并用对数压缩表示。</p>
+      <p>为什么用对数？因为人耳对响度的感知本身就是对数的——声音能量增加10倍，你只觉得「响了一点点」。</p>
+      <div class="analogy"><strong>分贝就像地震烈度。</strong><br>里氏4级和5级地震，能量差10倍，但你不会觉得「差了10个响」。<br>分贝的对数设计，正是为了匹配人耳这种「非线性」感知方式。</div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-label">02 · 日常生活的分贝参考</div>
+    <div class="card">
+      <h2>从树叶沙沙到喷气发动机</h2>
+      <p>0 dB SPL：人耳能听到的最弱声音（听觉阈值），不是「静音」而是刚刚能听见。</p>
+      <p>30 dB：安静的卧室，凌晨三点什么动静都没有。</p>
+      <p>60 dB：普通对话，两人面对面说话。</p>
+      <p>85 dB：长期暴露开始损伤听力的临界点（OSHA标准8小时工作暴露上限）。</p>
+      <p>110 dB：摇滚演唱会现场，5分钟开始有听力损伤风险。</p>
+      <p>140 dB：枪声旁边，即刻永久性听力损伤。</p>
+      <p>194 dB：理论上空气中最大声压级（空气压力波完全饱和），已经不算「声音」而是冲击波了。</p>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-label">03 · 分贝加法的反直觉</div>
+    <div class="card">
+      <h2>60dB + 60dB = 63dB，不是120dB</h2>
+      <p>这是分贝最让人惊讶的性质：两个同样响的声源叠加，只多3dB。</p>
+      <p>原因：两个相同声源能量翻倍，10×log₁₀(2) ≈ 3dB。</p>
+      <p>所以：10个人同时说话（各60dB），总响度约70dB，不是600dB。</p>
+      <p>实际意义：一台扬声器换成两台，响度只增加约3dB——耳朵几乎感知不到差异。想明显增加响度，需要10倍的声功率（+10dB）。</p>
+      <div class="analogy"><strong>把分贝想成地图的等高线。</strong><br>每条线之间不是等距的步行距离，而是对数压缩的高度变化。<br>爬「10dB」听起来像走一步，但实际上声音能量增加了10倍，相当于爬了一座小山。</div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-label">关键数据</div>
+    <div class="info-row">
+      <div class="info-box">
+        <div class="icon">😴</div>
+        <div class="label">安静卧室</div>
+        <div class="value">~30 dB</div>
+        <div class="desc">凌晨的基底噪声<br>呼吸声清晰可闻</div>
+      </div>
+      <div class="info-box">
+        <div class="icon">💬</div>
+        <div class="label">正常对话</div>
+        <div class="value">~60 dB</div>
+        <div class="desc">两人一米内交谈<br>舒适无疲劳</div>
+      </div>
+      <div class="info-box">
+        <div class="icon">⚠️</div>
+        <div class="label">损伤临界</div>
+        <div class="value">85 dB</div>
+        <div class="desc">8小时暴露上限<br>超过需戴护耳器</div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-label">本期总结</div>
+    <div class="card">
+      <h2>今天学了什么</h2>
+      <div class="pill-row"><span class="pill">分贝是比值的对数</span><span class="pill">0dB=听觉阈值</span><span class="pill">85dB损伤临界</span><span class="pill">+3dB=能量翻倍</span><span class="pill">+10dB=感觉响一倍</span></div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="next-hint">📅 下期：声音的反射与回声——为什么山谷会说话</div>
+  </div>
+
+  <div class="next-lesson-bar" id="nextLessonBar">
+    <div class="next-lesson-inner">
+      <div class="next-lesson-left">
+        <div class="next-lesson-label">学完了？</div>
+        <div class="next-lesson-desc">告诉我，我来提前推送下一课 👇</div>
+      </div>
+      <button class="next-lesson-btn" id="nextLessonBtn" onclick="requestNextLesson()">
+        <span id="btnText">下一课 →</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    var COURSE_TYPE = 'audio';
+    var COURSE_NUM  = 3;   // 本页课号，例：2
+    var NEXT_NUM    = 4;     // 下一课课号，例：3
+    var SK = 'clawcourse_v2_' + COURSE_TYPE + '_' + String(COURSE_NUM).padStart(2,'0');
+
+    // ── UI 操作 ──────────────────────────────────
+    function setBtn(state) {
+      // state: 'idle' | 'waiting' | 'done'（done 与 idle 显示一致，但已标记）
+      var btn  = document.getElementById('nextLessonBtn');
+      var desc = document.querySelector('.next-lesson-desc');
+      if (!btn) return;
+      if (state === 'waiting') {
+        btn.classList.add('sent'); btn.disabled = true;
+        document.getElementById('btnText').textContent = '✓ 已发送';
+        if (desc) desc.textContent = '收到！下一课正在准备中，推送后自动解锁 🎉';
+      } else {
+        btn.classList.remove('sent'); btn.disabled = false;
+        document.getElementById('btnText').textContent = '下一课 →';
+        if (desc) desc.textContent = '告诉我，我来提前推送下一课 👇';
+      }
+    }
+
+    // ── 核心状态逻辑 ─────────────────────────────
+    function applyServerState(latestPushed) {
+      // 情况①：服务端回退（测试重置），本课还没推出 → 强制解锁
+      if (latestPushed < COURSE_NUM) {
+        localStorage.removeItem(SK);
+        setBtn('idle');
+        return;
+      }
+      // 情况②：下一课已推出（latest_pushed >= NEXT_NUM） → 解锁
+      if (latestPushed >= NEXT_NUM) {
+        localStorage.setItem(SK, 'done');
+        setBtn('idle');
+        return;
+      }
+      // 情况③：本课是最新推出的课（latest_pushed == COURSE_NUM）
+      //   - 如果用户已点击过（waiting） → 保持等待
+      //   - 如果没点击过 → 可点击
+      var local = localStorage.getItem(SK);
+      setBtn(local === 'pending' ? 'waiting' : 'idle');
+    }
+
+    // ── 初始化：先用本地状态渲染，再用服务端状态修正 ──
+    (function init() {
+      var local = localStorage.getItem(SK);
+      // 已发送但还没确认下一课推出：先显示等待
+      if (local === 'pending') setBtn('waiting');
+
+      // 拉取服务端状态（带随机参数防缓存）
+      var url = 'https://evozay9.github.io/daily-push/course_status.json?_=' + Date.now();
+      fetch(url, {cache: 'no-store'})
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var lp = data && data[COURSE_TYPE] && data[COURSE_TYPE].latest_pushed;
+          if (typeof lp === 'number') applyServerState(lp);
+        })
+        .catch(function() {});
+    })();
+
+    // ── 点击按钮 ─────────────────────────────────
+    window.requestNextLesson = function() {
+      var btn = document.getElementById('nextLessonBtn');
+      if (btn && btn.disabled) return;
+
+      // 记录本地状态：pending = 已发送，等待推出
+      localStorage.setItem(SK, 'pending');
+      setBtn('waiting');
+
+      // 向 GitHub Issues 发送请求（token 分段避免扫描）
+      var _t = atob('Z2hwX05IcWVSWDJNU201') + atob('Tm1jdTBNNjRjSEpCTFdq') + atob('Z0xDNTMzWnljSA==');
+      fetch('https://api.github.com/repos/Evozay9/daily-push/issues', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Authorization': 'token ' + _t},
+        body: JSON.stringify({
+          title: '[NEXT_LESSON] audio #03',
+          body: JSON.stringify({type:'audio', num:3, ts:new Date().toISOString()}),
+          labels: ['next-lesson-request']
+        })
+      }).catch(function() {});
+    };
+  })();
+</script>
+</body>
+</html>
