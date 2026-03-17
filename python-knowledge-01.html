@@ -164,20 +164,67 @@ print(1 + 1)  # 数学运算也可以直接print</div>
   (function() {
     var COURSE_TYPE = 'python';
     var COURSE_NUM  = 1;
-    var storageKey = 'next_requested_' + COURSE_TYPE + '_' + COURSE_NUM;
-    if (localStorage.getItem(storageKey)) { markSent(); }
+    // key 加上完整前缀，避免跨课/跨系列污染
+    var storageKey = 'clawcourse_sent_' + COURSE_TYPE + '_' + String(COURSE_NUM).padStart(2,'0');
+    // 记录"下一课已送达"的 key（收到推送后用来重置按钮）
+    var nextKey    = 'clawcourse_sent_' + COURSE_TYPE + '_' + String(2).padStart(2,'0');
+
+    // 状态标记
+    var hasSent = !!localStorage.getItem(storageKey);
 
     function markSent() {
-      var btn = document.getElementById('nextLessonBtn');
+      var btn  = document.getElementById('nextLessonBtn');
       var desc = document.querySelector('.next-lesson-desc');
-      if (btn) { btn.classList.add('sent'); btn.disabled = true; document.getElementById('btnText').textContent = '✓ 已发送'; }
+      if (btn) {
+        btn.classList.add('sent');
+        btn.disabled = true;
+        document.getElementById('btnText').textContent = '✓ 已发送';
+      }
       if (desc) desc.textContent = '收到！下一课正在准备中 🎉';
     }
+
+    function resetBtn() {
+      var btn  = document.getElementById('nextLessonBtn');
+      var desc = document.querySelector('.next-lesson-desc');
+      if (btn) {
+        btn.classList.remove('sent');
+        btn.disabled = false;
+        document.getElementById('btnText').textContent = '下一课 →';
+      }
+      if (desc) desc.textContent = '告诉我，我来提前推送下一课 👇';
+    }
+
+    function checkStatus() {
+      // 1. 如果本页已发送 → 灰掉按钮
+      if (hasSent) { markSent(); }
+
+      // 2. fetch course_status.json，看下一课是否已推出
+      //    如果已推出，重置按钮（让用户能继续点下下课）
+      var statusUrl = 'https://evozay9.github.io/daily-push/course_status.json?t=' + Date.now();
+      fetch(statusUrl, {cache:'no-store'})
+        .then(function(r){ return r.json(); })
+        .then(function(data){
+          var cur = data && data[COURSE_TYPE] && data[COURSE_TYPE].current;
+          if (cur && cur >= 2) {
+            // 下一课已经推出 → 清除本页"已发送"标记，重置按钮
+            localStorage.removeItem(storageKey);
+            hasSent = false;
+            resetBtn();
+            // 把本页标记为"下一课已到"，防止重复重置闪烁
+            localStorage.setItem(storageKey + '_next_arrived', '1');
+          }
+        })
+        .catch(function(){});
+    }
+
+    // 页面加载时检查
+    checkStatus();
 
     window.requestNextLesson = function() {
       var btn = document.getElementById('nextLessonBtn');
       if (btn && btn.disabled) return;
       localStorage.setItem(storageKey, Date.now().toString());
+      hasSent = true;
       markSent();
       // token 分段 base64 运行时拼接，避免明文被扫描
       var _a = atob('Z2hwX05IcWVSWDJNU201');
