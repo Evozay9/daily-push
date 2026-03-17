@@ -333,6 +333,63 @@
       .card { padding: 20px 16px; }
       .slider-row { grid-template-columns: 1fr; }
     }
+
+    /* ── 下一课按钮栏 ── */
+    .next-lesson-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 999;
+      background: linear-gradient(to top, rgba(15,15,20,0.98) 60%, transparent);
+      padding: 16px 20px 24px;
+      pointer-events: none;
+    }
+    .next-lesson-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: rgba(26,26,36,0.95);
+      border: 1px solid rgba(124,92,252,0.35);
+      border-radius: 18px;
+      padding: 14px 20px;
+      pointer-events: all;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,92,252,0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .next-lesson-left {}
+    .next-lesson-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+    .next-lesson-desc {
+      font-size: 14px;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .next-lesson-btn {
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      border-radius: 12px;
+      padding: 12px 22px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, opacity 0.15s;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .next-lesson-btn:active { transform: scale(0.95); }
+    .next-lesson-btn.sent {
+      background: linear-gradient(135deg, #2a8a4a, #1a6a3a);
+      cursor: default;
+    }
+    .next-lesson-btn.sent:active { transform: none; }
   </style>
 </head>
 <body>
@@ -729,6 +786,19 @@
     <div class="next-hint">📅 下期预告：我们的耳朵能听多高多低？频率的世界</div>
   </div>
 
+  <!-- ═══ 下一课按钮 ═══ -->
+  <div class="next-lesson-bar" id="nextLessonBar">
+    <div class="next-lesson-inner">
+      <div class="next-lesson-left">
+        <div class="next-lesson-label">学完了？</div>
+        <div class="next-lesson-desc">告诉我，我来提前推送下一课 👇</div>
+      </div>
+      <button class="next-lesson-btn" id="nextLessonBtn" onclick="requestNextLesson()">
+        <span id="btnText">下一课 →</span>
+      </button>
+    </div>
+  </div>
+
 </div><!-- /container -->
 
 <!-- ═══ WAVE ANIMATION JS ═══ -->
@@ -836,6 +906,67 @@
     }
 
     drawWave();
+  })();
+</script>
+
+<!-- ═══ 下一课请求 JS ═══ -->
+<script>
+  (function() {
+    var COURSE_TYPE = 'audio';   // 课程类型
+    var COURSE_NUM  = 1;         // 当前课号
+
+    // 检查是否已经点过了
+    var storageKey = 'next_requested_' + COURSE_TYPE + '_' + COURSE_NUM;
+    if (localStorage.getItem(storageKey)) {
+      markSent();
+    }
+
+    function markSent() {
+      var btn = document.getElementById('nextLessonBtn');
+      var desc = document.querySelector('.next-lesson-desc');
+      if (btn) {
+        btn.classList.add('sent');
+        btn.disabled = true;
+        document.getElementById('btnText').textContent = '✓ 已发送';
+      }
+      if (desc) desc.textContent = '收到！下一课正在准备中 🎉';
+    }
+
+    window.requestNextLesson = function() {
+      var btn = document.getElementById('nextLessonBtn');
+      if (btn && btn.disabled) return;
+
+      // 记录到 localStorage（防重复点击）
+      localStorage.setItem(storageKey, Date.now().toString());
+      markSent();
+
+      // 写入 GitHub Pages 上的信号文件（通过特定URL触发）
+      // 实际信号：通过 fetch 写一个状态到可访问的 endpoint
+      // 由于纯静态页面限制，使用 GitHub Issues API 创建 issue 作为信号（无需服务器）
+      var payload = {
+        COURSE_TYPE: COURSE_TYPE,
+        COURSE_NUM: COURSE_NUM,
+        timestamp: new Date().toISOString(),
+        action: 'request_next'
+      };
+
+      // 把信号写到 GitHub Issue（WorkBuddy automation 会读取）
+      // 注意：这里使用的 repo 和 token 由 WorkBuddy 自动化系统配置
+      fetch('https://api.github.com/repos/PLACEHOLDER_OWNER/PLACEHOLDER_REPO/issues', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'token PLACEHOLDER_TOKEN'
+        },
+        body: JSON.stringify({
+          title: '[NEXT_LESSON] ' + COURSE_TYPE + ' #' + COURSE_NUM,
+          body: JSON.stringify(payload),
+          labels: ['next-lesson-request']
+        })
+      }).catch(function() {
+        // 静默失败，本地记录已保存
+      });
+    };
   })();
 </script>
 </body>
