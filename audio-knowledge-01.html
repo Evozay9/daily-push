@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>音频小知识 · 第01期 · 声音是什么？</title>
+  <style>
+    :root {
+      --bg: #0f0f14;
+      --card: #1a1a24;
+      --card2: #22222f;
+      --accent: #7c5cfc;
+      --accent2: #fc5c7d;
+      --accent3: #5cf8d8;
+      --text: #e8e8f0;
+      --muted: #8888aa;
+      --border: #2e2e42;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #1a0a2e 0%, #0d1a2e 50%, #0a2020 100%);
+      padding: 60px 24px 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(124,92,252,0.15) 0%, transparent 70%);
+      top: -100px; left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .tag {
+      display: inline-block;
+      background: rgba(124,92,252,0.2);
+      border: 1px solid rgba(124,92,252,0.5);
+      color: #a98bff;
+      font-size: 12px;
+      letter-spacing: 2px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 6vw, 52px);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      background: linear-gradient(90deg, #a98bff, #fc5c7d, #5cf8d8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero .subtitle {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+    .episode-badge {
+      position: absolute;
+      top: 24px; right: 24px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-top: 40px;
+    }
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      margin-bottom: 16px;
+    }
+    .card h2 {
+      font-size: 20px;
+      margin-bottom: 14px;
+      color: #fff;
+    }
+    .card p {
+      font-size: 15px;
+      line-height: 1.85;
+      color: #c8c8dc;
+    }
+    .card p + p { margin-top: 12px; }
+
+    /* ── Analogy highlight ── */
+    .analogy {
+      background: linear-gradient(135deg, rgba(124,92,252,0.12), rgba(92,248,216,0.08));
+      border-left: 3px solid var(--accent);
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-size: 15px;
+      line-height: 1.8;
+      color: #d8d8f0;
+    }
+    .analogy strong { color: #b8a0ff; }
+
+    /* ── Key term ── */
+    .kw {
+      display: inline-block;
+      background: rgba(252,92,125,0.15);
+      border: 1px solid rgba(252,92,125,0.3);
+      color: #ff8fab;
+      padding: 1px 8px;
+      border-radius: 6px;
+      font-size: 0.9em;
+    }
+    .kw2 {
+      display: inline-block;
+      background: rgba(92,248,216,0.12);
+      border: 1px solid rgba(92,248,216,0.25);
+      color: #5cf8d8;
+      padding: 1px 8px;
+      border-radius: 6px;
+      font-size: 0.9em;
+    }
+
+    /* ── SVG Diagrams ── */
+    .diagram-wrap {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+    .diagram-wrap svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .diagram-caption {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── 3-column info boxes ── */
+    .info-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .info-box {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 16px;
+      text-align: center;
+    }
+    .info-box .icon { font-size: 28px; margin-bottom: 8px; }
+    .info-box .label { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    .info-box .value { font-size: 17px; font-weight: 700; color: #fff; }
+    .info-box .desc { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+    /* ── Wave illustration controls ── */
+    .wave-container {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 20px 20px;
+      margin: 20px 0;
+    }
+    .wave-title {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    canvas#waveCanvas {
+      display: block;
+      width: 100%;
+      border-radius: 8px;
+      background: #12121c;
+    }
+    .wave-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    .wave-labels span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .slider-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .slider-group label {
+      font-size: 12px;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 6px;
+    }
+    .slider-group input[type=range] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+    .slider-val {
+      font-size: 13px;
+      color: var(--accent3);
+      font-weight: 600;
+    }
+
+    /* ── Steps ── */
+    .steps {
+      counter-reset: step;
+    }
+    .step-item {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+    .step-num {
+      counter-increment: step;
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .step-content h3 {
+      font-size: 16px;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .step-content p {
+      font-size: 14px;
+      color: #aaaabf;
+      line-height: 1.75;
+    }
+
+    /* ── Summary pill row ── */
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .pill {
+      background: rgba(124,92,252,0.15);
+      border: 1px solid rgba(124,92,252,0.3);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      color: #b0a0ff;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 2;
+    }
+    .next-hint {
+      display: inline-block;
+      margin-top: 16px;
+      background: rgba(92,248,216,0.1);
+      border: 1px solid rgba(92,248,216,0.25);
+      color: #5cf8d8;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .card { padding: 20px 16px; }
+      .slider-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="episode-badge">第 01 期 · 声学基础</div>
+  <div class="tag">音频小知识</div>
+  <h1>声音是什么？</h1>
+  <p class="subtitle">从「扔石头进水里」开始，用最直觉的方式<br>理解声音的本质——不需要任何数学基础</p>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="container">
+
+  <!-- §1 开场比喻 -->
+  <div class="section">
+    <div class="section-label">01 · 核心比喻</div>
+    <div class="card">
+      <h2>声音 = 空气的「波纹」</h2>
+      <p>你有没有往平静的水面扔过一颗石头？石头一落水，水面就从中心向四周荡开一圈一圈的波纹。</p>
+      <div class="analogy">
+        <strong>声音做的事，和那颗石头一模一样。</strong><br>
+        只不过声音振动的不是水，而是<strong>空气</strong>。<br>
+        当你拍一下手，你的手掌就像那颗石头——把附近的空气「挤」了一下，这个「挤」随后一层一层地往外传出去，传到你耳朵里，你就听到了声音。
+      </div>
+      <p>水波你能看见；空气的波你看不见，但它完完全全存在。</p>
+    </div>
+  </div>
+
+  <!-- §2 图示：空气疏密波 -->
+  <div class="section">
+    <div class="section-label">02 · 图解原理</div>
+
+    <!-- 水波对比图 -->
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
+        <!-- 背景 -->
+        <rect width="700" height="260" fill="#12121c" rx="10"/>
+
+        <!-- ── 左侧：水波 ── -->
+        <text x="175" y="28" text-anchor="middle" fill="#8888aa" font-size="13" font-family="sans-serif">水波（你看得见）</text>
+        <!-- 水面 -->
+        <rect x="30" y="40" width="290" height="180" rx="8" fill="#0a1828"/>
+        <!-- 石头 -->
+        <circle cx="175" cy="130" r="8" fill="#8888aa"/>
+        <text x="175" y="108" text-anchor="middle" fill="#aaaacc" font-size="11" font-family="sans-serif">石头</text>
+        <!-- 波纹 -->
+        <circle cx="175" cy="130" r="22" fill="none" stroke="#5c8df8" stroke-width="1.5" opacity="0.9"/>
+        <circle cx="175" cy="130" r="40" fill="none" stroke="#5c8df8" stroke-width="1.2" opacity="0.7"/>
+        <circle cx="175" cy="130" r="60" fill="none" stroke="#5c8df8" stroke-width="1" opacity="0.5"/>
+        <circle cx="175" cy="130" r="82" fill="none" stroke="#5c8df8" stroke-width="0.8" opacity="0.3"/>
+        <circle cx="175" cy="130" r="108" fill="none" stroke="#5c8df8" stroke-width="0.6" opacity="0.2"/>
+        <!-- 箭头标注 -->
+        <text x="227" y="100" fill="#5c8df8" font-size="11" font-family="sans-serif">波纹向外扩散</text>
+
+        <!-- 分隔线 -->
+        <line x1="350" y1="20" x2="350" y2="248" stroke="#2e2e42" stroke-width="1" stroke-dasharray="4,4"/>
+
+        <!-- ── 右侧：声波（疏密波） ── -->
+        <text x="525" y="28" text-anchor="middle" fill="#8888aa" font-size="13" font-family="sans-serif">声波（空气疏密波）</text>
+
+        <!-- 空气分子群 - 疏密交替 -->
+        <!-- 密区1 (靠近声源) -->
+        <g opacity="0.9">
+          <!-- 密区1 -->
+          <circle cx="387" cy="105" r="3" fill="#fc5c7d"/><circle cx="393" cy="118" r="3" fill="#fc5c7d"/>
+          <circle cx="380" cy="130" r="3" fill="#fc5c7d"/><circle cx="391" cy="142" r="3" fill="#fc5c7d"/>
+          <circle cx="383" cy="118" r="2.5" fill="#fc5c7d"/><circle cx="396" cy="130" r="2.5" fill="#fc5c7d"/>
+          <circle cx="387" cy="155" r="3" fill="#fc5c7d"/>
+          <!-- 疏区1 -->
+          <circle cx="415" cy="100" r="3" fill="#7c5cfc"/><circle cx="428" cy="120" r="3" fill="#7c5cfc"/>
+          <circle cx="420" cy="140" r="3" fill="#7c5cfc"/><circle cx="433" cy="155" r="3" fill="#7c5cfc"/>
+          <!-- 密区2 -->
+          <circle cx="453" cy="103" r="3" fill="#fc5c7d"/><circle cx="460" cy="118" r="3" fill="#fc5c7d"/>
+          <circle cx="449" cy="130" r="3" fill="#fc5c7d"/><circle cx="463" cy="142" r="3" fill="#fc5c7d"/>
+          <circle cx="456" cy="155" r="3" fill="#fc5c7d"/><circle cx="444" cy="118" r="2.5" fill="#fc5c7d"/>
+          <!-- 疏区2 -->
+          <circle cx="483" cy="100" r="3" fill="#7c5cfc"/><circle cx="496" cy="120" r="3" fill="#7c5cfc"/>
+          <circle cx="488" cy="140" r="3" fill="#7c5cfc"/>
+          <!-- 密区3 -->
+          <circle cx="517" cy="105" r="3" fill="#fc5c7d"/><circle cx="524" cy="120" r="3" fill="#fc5c7d"/>
+          <circle cx="511" cy="132" r="3" fill="#fc5c7d"/><circle cx="527" cy="145" r="3" fill="#fc5c7d"/>
+          <circle cx="519" cy="155" r="2.5" fill="#fc5c7d"/>
+          <!-- 疏区3 -->
+          <circle cx="549" cy="102" r="3" fill="#7c5cfc"/><circle cx="562" cy="122" r="3" fill="#7c5cfc"/>
+          <circle cx="554" cy="142" r="3" fill="#7c5cfc"/>
+          <!-- 密区4 (接近耳朵) -->
+          <circle cx="584" cy="105" r="3" fill="#fc5c7d"/><circle cx="591" cy="120" r="3" fill="#fc5c7d"/>
+          <circle cx="578" cy="132" r="3" fill="#fc5c7d"/><circle cx="593" cy="145" r="3" fill="#fc5c7d"/>
+        </g>
+
+        <!-- 声源 (扬声器图示) -->
+        <rect x="358" y="108" width="18" height="44" rx="3" fill="#333" stroke="#555" stroke-width="1"/>
+        <path d="M376 112 L390 100 L390 162 L376 150 Z" fill="#5c5c7c"/>
+        <text x="365" y="175" fill="#aaaacc" font-size="10" font-family="sans-serif" text-anchor="middle">声源</text>
+
+        <!-- 耳朵图示 -->
+        <ellipse cx="625" cy="130" rx="14" ry="22" fill="none" stroke="#fc8fab" stroke-width="2"/>
+        <path d="M625 108 Q640 108 640 130 Q640 150 628 150 Q622 150 622 142 Q628 142 628 130 Q628 118 622 116" fill="none" stroke="#fc8fab" stroke-width="1.5"/>
+        <text x="635" y="175" fill="#aaaacc" font-size="10" font-family="sans-serif" text-anchor="middle">耳朵</text>
+
+        <!-- 图例 -->
+        <circle cx="395" cy="235" r="5" fill="#fc5c7d"/>
+        <text x="405" y="239" fill="#aaaacc" font-size="11" font-family="sans-serif">密（空气被挤拢）</text>
+        <circle cx="500" cy="235" r="5" fill="#7c5cfc"/>
+        <text x="510" y="239" fill="#aaaacc" font-size="11" font-family="sans-serif">疏（空气被拉开）</text>
+      </svg>
+      <div class="diagram-caption">声波本质：空气分子交替「挤拢—拉开」形成的压力波，从声源向四周传播</div>
+    </div>
+
+    <div class="card">
+      <h2>空气是怎么「传递」声音的？</h2>
+      <p>想象一排多米诺骨牌站成一排。你推倒第一块，它倒下去碰到第二块，第二块再碰第三块……就这样一路传下去。</p>
+      <div class="analogy">
+        <strong>空气中的分子，就是那一排骨牌。</strong><br>
+        声源振动，把旁边的空气分子推开（压缩），那片分子又推旁边的……<br>
+        但注意：骨牌本身没有「跑」到终点，它只是倒下去再弹回来。<br>
+        <strong>空气分子也不会随声音跑到你耳朵里——它们只是原地「来回晃」，把压力传递下去。</strong>
+      </div>
+      <p>这就是为什么你在密封的瓶子里点蜡烛，声音可以传进去，但空气并没有跑进去。</p>
+    </div>
+  </div>
+
+  <!-- §3 三个关键参数 -->
+  <div class="section">
+    <div class="section-label">03 · 三个关键词</div>
+    <div class="card">
+      <h2>声音的「三张脸」</h2>
+      <p>每一个声音都可以用三个维度来描述：</p>
+      <div class="info-row">
+        <div class="info-box">
+          <div class="icon">📏</div>
+          <div class="label">振幅 → 响度</div>
+          <div class="value" style="color:#fc5c7d">大 / 小</div>
+          <div class="desc">波纹荡多高 = 声音多响<br><em>石头扔得越用力，水波越大</em></div>
+        </div>
+        <div class="info-box">
+          <div class="icon">⚡</div>
+          <div class="label">频率 → 音调</div>
+          <div class="value" style="color:#7c5cfc">高 / 低</div>
+          <div class="desc">波纹荡多快 = 音调高低<br><em>快 = 高音，慢 = 低音</em></div>
+        </div>
+        <div class="info-box">
+          <div class="icon">🎨</div>
+          <div class="label">波形 → 音色</div>
+          <div class="value" style="color:#5cf8d8">纯 / 复杂</div>
+          <div class="desc">波纹的「形状」 = 声音的质感<br><em>钢琴与吉他响度音调相同，但音色不同</em></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §4 互动波形图 -->
+  <div class="section">
+    <div class="section-label">04 · 互动体验</div>
+    <div class="wave-container">
+      <div class="wave-title">拖动滑块，看看波形如何变化</div>
+      <canvas id="waveCanvas" width="760" height="160"></canvas>
+      <div class="wave-labels">
+        <span>← 过去</span>
+        <span>时间轴</span>
+        <span>现在 →</span>
+      </div>
+      <div class="slider-row">
+        <div class="slider-group">
+          <label>
+            振幅（响度）：<span class="slider-val" id="ampVal">50</span>
+          </label>
+          <input type="range" id="ampSlider" min="5" max="75" value="50">
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">↑ 越大越响</div>
+        </div>
+        <div class="slider-group">
+          <label>
+            频率（音调）：<span class="slider-val" id="freqVal">3.0</span> Hz
+          </label>
+          <input type="range" id="freqSlider" min="1" max="10" value="3" step="0.5">
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">↑ 越大音调越高</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §5 声音传播方式 -->
+  <div class="section">
+    <div class="section-label">05 · 声音的传播</div>
+
+    <!-- 传播路径SVG -->
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="700" height="200" fill="#12121c" rx="10"/>
+        <text x="350" y="26" text-anchor="middle" fill="#8888aa" font-size="13" font-family="sans-serif">声音可以通过不同介质传播</text>
+
+        <!-- 空气 -->
+        <rect x="30" y="45" width="180" height="100" rx="8" fill="#1a1a3a" stroke="#2e2e52" stroke-width="1"/>
+        <text x="120" y="68" text-anchor="middle" fill="#7c5cfc" font-size="12" font-family="sans-serif" font-weight="bold">空气</text>
+        <!-- 空气分子 (稀疏) -->
+        <circle cx="60" cy="95" r="3" fill="#7c5cfc" opacity="0.6"/>
+        <circle cx="90" cy="110" r="3" fill="#7c5cfc" opacity="0.6"/>
+        <circle cx="120" cy="90" r="3" fill="#7c5cfc" opacity="0.6"/>
+        <circle cx="150" cy="105" r="3" fill="#7c5cfc" opacity="0.6"/>
+        <circle cx="175" cy="92" r="3" fill="#7c5cfc" opacity="0.6"/>
+        <circle cx="75" cy="125" r="2.5" fill="#7c5cfc" opacity="0.5"/>
+        <circle cx="140" cy="120" r="2.5" fill="#7c5cfc" opacity="0.5"/>
+        <!-- 速度标注 -->
+        <text x="120" y="135" text-anchor="middle" fill="#aaaacc" font-size="11" font-family="sans-serif">约 340 米/秒</text>
+        <text x="120" y="152" text-anchor="middle" fill="#666688" font-size="10" font-family="sans-serif">（常温）</text>
+
+        <!-- 水 -->
+        <rect x="260" y="45" width="180" height="100" rx="8" fill="#0a1828" stroke="#1e3a52" stroke-width="1"/>
+        <text x="350" y="68" text-anchor="middle" fill="#5cf8d8" font-size="12" font-family="sans-serif" font-weight="bold">水</text>
+        <!-- 水分子 (较密) -->
+        <circle cx="285" cy="90" r="3" fill="#5cf8d8" opacity="0.6"/>
+        <circle cx="300" cy="105" r="3" fill="#5cf8d8" opacity="0.6"/>
+        <circle cx="315" cy="90" r="3" fill="#5cf8d8" opacity="0.6"/>
+        <circle cx="330" cy="110" r="3" fill="#5cf8d8" opacity="0.6"/>
+        <circle cx="345" cy="92" r="3" fill="#5cf8d8" opacity="0.6"/>
+        <circle cx="360" cy="108" r="3" fill="#5cf8d8" opacity="0.6"/>
+        <circle cx="375" cy="90" r="3" fill="#5cf8d8" opacity="0.6"/>
+        <circle cx="390" cy="105" r="3" fill="#5cf8d8" opacity="0.6"/>
+        <circle cx="405" cy="92" r="2.5" fill="#5cf8d8" opacity="0.5"/>
+        <circle cx="295" cy="118" r="2.5" fill="#5cf8d8" opacity="0.5"/>
+        <circle cx="355" cy="122" r="2.5" fill="#5cf8d8" opacity="0.5"/>
+        <text x="350" y="135" text-anchor="middle" fill="#aaaacc" font-size="11" font-family="sans-serif">约 1500 米/秒</text>
+        <text x="350" y="152" text-anchor="middle" fill="#666688" font-size="10" font-family="sans-serif">（比空气快 4 倍多！）</text>
+
+        <!-- 固体（钢铁） -->
+        <rect x="490" y="45" width="180" height="100" rx="8" fill="#1a1208" stroke="#3a3010" stroke-width="1"/>
+        <text x="580" y="68" text-anchor="middle" fill="#fcd25c" font-size="12" font-family="sans-serif" font-weight="bold">固体（钢铁）</text>
+        <!-- 固体分子 (密集、规则) -->
+        <g fill="#fcd25c" opacity="0.65">
+          <circle cx="515" cy="87" r="3"/><circle cx="530" cy="87" r="3"/><circle cx="545" cy="87" r="3"/>
+          <circle cx="560" cy="87" r="3"/><circle cx="575" cy="87" r="3"/><circle cx="590" cy="87" r="3"/>
+          <circle cx="605" cy="87" r="3"/><circle cx="620" cy="87" r="3"/>
+          <circle cx="515" cy="103" r="3"/><circle cx="530" cy="103" r="3"/><circle cx="545" cy="103" r="3"/>
+          <circle cx="560" cy="103" r="3"/><circle cx="575" cy="103" r="3"/><circle cx="590" cy="103" r="3"/>
+          <circle cx="605" cy="103" r="3"/><circle cx="620" cy="103" r="3"/>
+          <circle cx="515" cy="119" r="3"/><circle cx="530" cy="119" r="3"/><circle cx="545" cy="119" r="3"/>
+          <circle cx="560" cy="119" r="3"/><circle cx="575" cy="119" r="3"/><circle cx="590" cy="119" r="3"/>
+          <circle cx="605" cy="119" r="3"/><circle cx="620" cy="119" r="3"/>
+        </g>
+        <text x="580" y="145" text-anchor="middle" fill="#aaaacc" font-size="11" font-family="sans-serif">约 5000 米/秒</text>
+        <text x="580" y="162" text-anchor="middle" fill="#666688" font-size="10" font-family="sans-serif">（分子越密，传越快）</text>
+
+        <!-- 速度对比箭头 -->
+        <text x="216" y="115" text-anchor="middle" fill="#fc5c7d" font-size="18" font-family="sans-serif">&lt;</text>
+        <text x="446" y="115" text-anchor="middle" fill="#fc5c7d" font-size="18" font-family="sans-serif">&lt;</text>
+
+        <!-- 底部结论 -->
+        <text x="350" y="188" text-anchor="middle" fill="#666688" font-size="11" font-family="sans-serif">介质越密集，分子之间越「紧密」，声音传递越快</text>
+      </svg>
+      <div class="diagram-caption">声速对比：固体 > 液体 > 气体　（骨牌越紧，倒下去越快）</div>
+    </div>
+
+    <div class="card">
+      <h2>为什么真空中没有声音？</h2>
+      <div class="analogy">
+        <strong>真空 = 一块骨牌都没有。</strong><br>
+        你推了第一块，它倒下去……但旁边什么都没有，什么也传不过去。<br>
+        所以宇宙里爆炸也是「悄无声息」的——不是因为爆炸不剧烈，而是那里连空气都没有。
+      </div>
+    </div>
+  </div>
+
+  <!-- §6 声音进入耳朵 -->
+  <div class="section">
+    <div class="section-label">06 · 从空气到大脑</div>
+    <div class="card">
+      <h2>你的耳朵是怎么「接收」声音的？</h2>
+      <div class="steps">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>空气波抵达耳廓</h3>
+            <p>耳廓（耳朵的外形）像一个漏斗，把周围的声波汇聚进耳道，就像卫星天线收集信号一样。</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>鼓膜振动</h3>
+            <p>声波碰到耳道尽头的鼓膜——它像一张绷紧的鼓皮，被气压「推来推去」，开始振动。<br>空气的波动，在这里变成了<span class="kw">机械振动</span>。</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>三块小骨头放大信号</h3>
+            <p>鼓膜带动「锤骨→砧骨→镫骨」三块人体最小的骨头，像杠杆一样把振动放大，传入充满液体的内耳。</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>耳蜗把振动变成电信号</h3>
+            <p>内耳的耳蜗里有成千上万根「毛细胞」，不同频率的振动触发不同位置的毛细胞，毛细胞把振动转成<span class="kw2">电信号</span>，传给大脑，你就「听到」了。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 耳朵结构图 -->
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
+        <rect width="700" height="220" fill="#12121c" rx="10"/>
+
+        <!-- 声波来袭 -->
+        <path d="M30 110 Q50 90 70 110 Q90 130 110 110" fill="none" stroke="#7c5cfc" stroke-width="2" opacity="0.8"/>
+        <path d="M50 110 Q70 90 90 110 Q110 130 130 110" fill="none" stroke="#7c5cfc" stroke-width="1.5" opacity="0.5"/>
+        <path d="M70 110 Q90 90 110 110 Q130 130 150 110" fill="none" stroke="#7c5cfc" stroke-width="1" opacity="0.3"/>
+        <text x="80" y="155" text-anchor="middle" fill="#7c5cfc" font-size="11" font-family="sans-serif">声波</text>
+        <!-- 箭头 -->
+        <line x1="145" y1="110" x2="175" y2="110" stroke="#555" stroke-width="1.5"/>
+        <polygon points="175,106 183,110 175,114" fill="#555"/>
+
+        <!-- 耳廓 -->
+        <path d="M185 60 Q220 40 240 70 Q260 100 250 130 Q240 160 220 170 Q200 175 190 160 Q185 145 195 138 Q210 130 212 115 Q214 100 205 90 Q195 80 185 75 Z" fill="#2a1a0a" stroke="#8b5e3c" stroke-width="1.5"/>
+        <text x="218" y="195" text-anchor="middle" fill="#aaaacc" font-size="11" font-family="sans-serif">耳廓</text>
+
+        <!-- 耳道 -->
+        <path d="M225 108 Q255 105 280 110 Q300 115 310 112" fill="none" stroke="#8b5e3c" stroke-width="8" stroke-linecap="round"/>
+        <text x="265" y="135" text-anchor="middle" fill="#888" font-size="10" font-family="sans-serif">耳道</text>
+
+        <!-- 鼓膜 -->
+        <ellipse cx="315" cy="111" rx="5" ry="20" fill="#fc8fab" stroke="#fc5c7d" stroke-width="1.5"/>
+        <text x="315" y="148" text-anchor="middle" fill="#fc8fab" font-size="10" font-family="sans-serif">鼓膜</text>
+
+        <!-- 三块听小骨 -->
+        <!-- 锤骨 -->
+        <line x1="320" y1="100" x2="345" y2="92" stroke="#fcd25c" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="345" cy="92" r="5" fill="#fcd25c"/>
+        <text x="348" y="82" fill="#fcd25c" font-size="10" font-family="sans-serif">锤骨</text>
+        <!-- 砧骨 -->
+        <line x1="345" y1="92" x2="375" y2="97" stroke="#fcd25c" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="375" cy="97" r="4.5" fill="#fcd25c"/>
+        <text x="370" y="82" fill="#fcd25c" font-size="10" font-family="sans-serif">砧骨</text>
+        <!-- 镫骨 -->
+        <line x1="375" y1="97" x2="400" y2="105" stroke="#fcd25c" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="400" cy="105" r="4" fill="#fcd25c"/>
+        <text x="396" y="91" fill="#fcd25c" font-size="10" font-family="sans-serif">镫骨</text>
+        <text x="360" y="160" text-anchor="middle" fill="#888" font-size="9" font-family="sans-serif">三块听小骨（杠杆放大）</text>
+
+        <!-- 耳蜗 -->
+        <path d="M408 105 Q430 80 460 90 Q490 100 490 125 Q490 155 465 162 Q440 165 425 148 Q415 135 422 120 Q430 108 445 112 Q458 118 455 130 Q452 140 443 140" fill="none" stroke="#5cf8d8" stroke-width="2.5"/>
+        <circle cx="408" cy="105" r="4" fill="#5cf8d8"/>
+        <text x="457" y="185" text-anchor="middle" fill="#5cf8d8" font-size="11" font-family="sans-serif">耳蜗（毛细胞）</text>
+
+        <!-- 神经 -->
+        <path d="M465 130 Q520 128 560 125" fill="none" stroke="#fc8fab" stroke-width="2" stroke-dasharray="5,3"/>
+        <polygon points="560,121 568,125 560,129" fill="#fc8fab"/>
+        <text x="513" y="115" fill="#fc8fab" font-size="10" font-family="sans-serif">听觉神经</text>
+
+        <!-- 大脑 -->
+        <ellipse cx="610" cy="115" rx="55" ry="45" fill="#1a0a2a" stroke="#7c5cfc" stroke-width="1.5"/>
+        <path d="M580 100 Q595 90 610 100 Q625 90 640 100" fill="none" stroke="#7c5cfc" stroke-width="1.5" opacity="0.6"/>
+        <path d="M572 115 Q587 105 602 115 Q617 105 632 115 Q643 112 648 120" fill="none" stroke="#7c5cfc" stroke-width="1.5" opacity="0.6"/>
+        <path d="M575 130 Q590 122 605 130 Q620 122 635 130" fill="none" stroke="#7c5cfc" stroke-width="1.5" opacity="0.6"/>
+        <text x="610" y="118" text-anchor="middle" fill="#a98bff" font-size="12" font-family="sans-serif">大脑</text>
+        <text x="610" y="133" text-anchor="middle" fill="#7c5cfc" font-size="10" font-family="sans-serif">「听到了！」</text>
+        <text x="610" y="175" text-anchor="middle" fill="#888" font-size="10" font-family="sans-serif">电信号 → 听觉感知</text>
+
+        <!-- 流程箭头 -->
+        <text x="350" y="210" text-anchor="middle" fill="#444466" font-size="10" font-family="sans-serif">声波 → 机械振动（鼓膜） → 放大（听小骨） → 液体振动（耳蜗） → 电信号 → 大脑</text>
+      </svg>
+      <div class="diagram-caption">声音从空气传进大脑的完整路径</div>
+    </div>
+  </div>
+
+  <!-- §7 总结 -->
+  <div class="section">
+    <div class="section-label">07 · 本期总结</div>
+    <div class="card">
+      <h2>记住这三句话就够了</h2>
+      <div class="analogy">
+        🌊 <strong>声音是空气的波纹</strong>——就像扔石头进水里。<br><br>
+        📡 <strong>空气分子只是原地晃，不是「跑」到你耳边</strong>——像多米诺骨牌，传的是「动作」不是「骨牌本身」。<br><br>
+        👂 <strong>耳朵把「空气的波」变成「大脑的电信号」</strong>——这个转换过程经过鼓膜 → 三块小骨头 → 耳蜗。
+      </div>
+      <div class="pill-row">
+        <span class="pill">声波 = 压力波</span>
+        <span class="pill">振幅 → 响度</span>
+        <span class="pill">频率 → 音调</span>
+        <span class="pill">波形 → 音色</span>
+        <span class="pill">真空不传声</span>
+        <span class="pill">固体传声最快</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div>音频小知识 · 第 01 期 · 声学基础篇</div>
+    <div style="margin-top:6px;color:#555">系列进度：声学基础 → 频率与人耳 → 分贝与响度 → 混响与声场 → 扩声原理</div>
+    <div class="next-hint">📅 下期预告：我们的耳朵能听多高多低？频率的世界</div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ═══ WAVE ANIMATION JS ═══ -->
+<script>
+  const canvas = document.getElementById('waveCanvas');
+  const ctx = canvas.getContext('2d');
+  let amp = 50, freq = 3, phase = 0, raf;
+
+  function drawWave() {
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+
+    // BG grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x <= W; x += 60) {
+      ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
+    }
+    for (let y = 0; y <= H; y += 40) {
+      ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+    }
+
+    // Centre line
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, H/2); ctx.lineTo(W, H/2); ctx.stroke();
+
+    // Glow wave
+    const gradient = ctx.createLinearGradient(0, 0, W, 0);
+    gradient.addColorStop(0, 'rgba(124,92,252,0.8)');
+    gradient.addColorStop(0.5, 'rgba(252,92,125,0.9)');
+    gradient.addColorStop(1, 'rgba(92,248,216,0.8)');
+
+    ctx.shadowColor = 'rgba(124,92,252,0.6)';
+    ctx.shadowBlur = 12;
+    ctx.strokeStyle = gradient;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let x = 0; x <= W; x++) {
+      const t = (x / W) * Math.PI * 2 * freq + phase;
+      const y = H/2 + Math.sin(t) * amp;
+      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    phase += 0.03;
+    raf = requestAnimationFrame(drawWave);
+  }
+
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * window.devicePixelRatio || rect.width;
+    canvas.height = 160 * (window.devicePixelRatio || 1);
+    ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+  }
+
+  // Sliders
+  document.getElementById('ampSlider').addEventListener('input', function() {
+    amp = +this.value;
+    document.getElementById('ampVal').textContent = this.value;
+  });
+  document.getElementById('freqSlider').addEventListener('input', function() {
+    freq = +this.value;
+    document.getElementById('freqVal').textContent = (+this.value).toFixed(1);
+  });
+
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(raf);
+    resizeCanvas();
+    drawWave();
+  });
+
+  resizeCanvas();
+  drawWave();
+</script>
+</body>
+</html>
