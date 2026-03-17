@@ -141,15 +141,16 @@
   (function() {
     var COURSE_TYPE = 'audio';
     var COURSE_NUM  = 2;
+    var NEXT_NUM    = 3;
     // key 加上完整前缀，避免跨课/跨系列污染
-    var storageKey = 'clawcourse_sent_' + COURSE_TYPE + '_' + String(COURSE_NUM).padStart(2,'0');
-    // 记录"下一课已送达"的 key（收到推送后用来重置按钮）
-    var nextKey    = 'clawcourse_sent_' + COURSE_TYPE + '_' + String(3).padStart(2,'0');
+    var storageKey  = 'clawcourse_sent_' + COURSE_TYPE + '_' + String(COURSE_NUM).padStart(2,'0');
+    // 记录本页"已发送时服务端的进度值"，用于回退检测
+    var sentAtKey   = storageKey + '_sent_at_cur';
 
-    // 状态标记
+    // 状态标记：是否已发送过
     var hasSent = !!localStorage.getItem(storageKey);
 
-    function markSent() {
+    function markSent(serverCur) {
       var btn  = document.getElementById('nextLessonBtn');
       var desc = document.querySelector('.next-lesson-desc');
       if (btn) {
@@ -158,6 +159,10 @@
         document.getElementById('btnText').textContent = '✓ 已发送';
       }
       if (desc) desc.textContent = '收到！下一课正在准备中 🎉';
+      // 记录发送时服务端的 current 值，用于后续回退检测
+      if (serverCur !== undefined) {
+        localStorage.setItem(sentAtKey, String(serverCur));
+      }
     }
 
     function resetBtn() {
@@ -169,26 +174,39 @@
         document.getElementById('btnText').textContent = '下一课 →';
       }
       if (desc) desc.textContent = '告诉我，我来提前推送下一课 👇';
+      // 清除所有本课相关 localStorage
+      localStorage.removeItem(storageKey);
+      localStorage.removeItem(sentAtKey);
+      hasSent = false;
     }
 
     function checkStatus() {
-      // 1. 如果本页已发送 → 灰掉按钮
+      // 先按本地状态初始化 UI
       if (hasSent) { markSent(); }
 
-      // 2. fetch course_status.json，看下一课是否已推出
-      //    如果已推出，重置按钮（让用户能继续点下下课）
+      // fetch course_status.json，获取服务端当前进度
       var statusUrl = 'https://evozay9.github.io/daily-push/course_status.json?t=' + Date.now();
       fetch(statusUrl, {cache:'no-store'})
         .then(function(r){ return r.json(); })
         .then(function(data){
           var cur = data && data[COURSE_TYPE] && data[COURSE_TYPE].current;
-          if (cur && cur >= 3) {
-            // 下一课已经推出 → 清除本页"已发送"标记，重置按钮
-            localStorage.removeItem(storageKey);
-            hasSent = false;
+          if (typeof cur !== 'number') return;
+
+          // ① 服务端进度回退（测试重置）：cur < COURSE_NUM → 强制解锁
+          if (cur < COURSE_NUM) {
             resetBtn();
-            // 把本页标记为"下一课已到"，防止重复重置闪烁
-            localStorage.setItem(storageKey + '_next_arrived', '1');
+            return;
+          }
+
+          // ② 发送后服务端进度与发送时一致，说明还没推出下一课 → 保持已发送状态
+          //    发送后 cur >= NEXT_NUM，说明下一课已推出 → 解锁按钮
+          if (hasSent) {
+            var sentAt = parseInt(localStorage.getItem(sentAtKey) || '0', 10);
+            // 如果服务端 current 在发送后还没变化（仍 == sentAt），保持锁定
+            // 如果已经推出下一课（cur >= NEXT_NUM），解锁
+            if (cur >= NEXT_NUM) {
+              resetBtn();
+            }
           }
         })
         .catch(function(){});
@@ -202,7 +220,7 @@
       if (btn && btn.disabled) return;
       localStorage.setItem(storageKey, Date.now().toString());
       hasSent = true;
-      markSent();
+      markSent(COURSE_NUM);  // 记录发送时的服务端 current（本课号）
       // token 分段 base64 运行时拼接，避免明文被扫描
       var _a = atob('Z2hwX05IcWVSWDJNU201');
       var _b = atob('Tm1jdTBNNjRjSEpCTFdq');
