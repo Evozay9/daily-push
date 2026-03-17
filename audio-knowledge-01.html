@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=4.0, user-scalable=yes" />
   <title>音频小知识 · 第01期 · 声音是什么？</title>
   <style>
     :root {
@@ -25,6 +25,7 @@
       color: var(--text);
       min-height: 100vh;
       padding: 0 0 60px;
+      overflow-x: hidden;
     }
 
     /* ── Hero ── */
@@ -212,6 +213,7 @@
       border-radius: 14px;
       padding: 24px 20px 20px;
       margin: 20px 0;
+      overflow: hidden;
     }
     .wave-title {
       font-size: 13px;
@@ -223,6 +225,7 @@
     canvas#waveCanvas {
       display: block;
       width: 100%;
+      max-width: 100%;
       border-radius: 8px;
       background: #12121c;
     }
@@ -736,22 +739,18 @@
     let amp = 50, freq = 3, phase = 0, raf;
 
     function resizeCanvas() {
-      const rect = canvas.getBoundingClientRect();
-      const cssW = rect.width || 760;
+      // 每次都重新取容器实际宽度，应对缩放/字体变化
+      const container = canvas.parentElement;
+      const cssW = container.clientWidth - 40; // 减去padding
       const cssH = 160;
       const dpr = window.devicePixelRatio || 1;
-      
-      // 设置物理像素
+
       canvas.width = Math.floor(cssW * dpr);
       canvas.height = Math.floor(cssH * dpr);
-      
-      // 保持CSS尺寸
       canvas.style.width = cssW + 'px';
       canvas.style.height = cssH + 'px';
-      
-      // 缩放坐标系
       ctx.scale(dpr, dpr);
-      
+
       return { w: cssW, h: cssH };
     }
 
@@ -778,16 +777,14 @@
       ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(0, H/2); ctx.lineTo(W, H/2); ctx.stroke();
 
-      // 振幅映射到画布高度（留出边距）
       const maxAmp = H/2 - 15;
       const drawAmp = (amp / 75) * maxAmp;
 
-      // 画波形 - 多层线条模拟发光效果（iOS Safari兼容）
       const colors = [
-        'rgba(124,92,252,0.15)',  // 外层
+        'rgba(124,92,252,0.15)',
         'rgba(124,92,252,0.3)',
-        'rgba(124,92,252,0.6)',   // 中层
-        'rgba(200,150,255,0.9)'   // 核心
+        'rgba(124,92,252,0.6)',
+        'rgba(200,150,255,0.9)'
       ];
       const widths = [8, 5, 3, 1.5];
 
@@ -810,33 +807,34 @@
       raf = requestAnimationFrame(drawWave);
     }
 
-    // Sliders - 同时更新数值和变量
-    const ampSlider = document.getElementById('ampSlider');
-    const freqSlider = document.getElementById('freqSlider');
-    const ampVal = document.getElementById('ampVal');
-    const freqVal = document.getElementById('freqVal');
-
-    ampSlider.addEventListener('input', function(e) {
-      amp = parseFloat(e.target.value);
-      ampVal.textContent = amp;
-    });
-
-    freqSlider.addEventListener('input', function(e) {
-      freq = parseFloat(e.target.value);
-      freqVal.textContent = freq.toFixed(1);
-    });
-
-    // 触摸设备优化：防止滑动时页面滚动
-    ampSlider.addEventListener('touchstart', function(e) { e.stopPropagation(); }, {passive: true});
-    freqSlider.addEventListener('touchstart', function(e) { e.stopPropagation(); }, {passive: true});
-
-    window.addEventListener('resize', function() {
+    function handleResize() {
       cancelAnimationFrame(raf);
       dims = resizeCanvas();
       drawWave();
+    }
+
+    // Sliders
+    document.getElementById('ampSlider').addEventListener('input', function(e) {
+      amp = parseFloat(e.target.value);
+      document.getElementById('ampVal').textContent = amp;
+    });
+    document.getElementById('freqSlider').addEventListener('input', function(e) {
+      freq = parseFloat(e.target.value);
+      document.getElementById('freqVal').textContent = freq.toFixed(1);
     });
 
-    // 启动
+    // 触摸优化
+    document.getElementById('ampSlider').addEventListener('touchstart', function(e) { e.stopPropagation(); }, {passive: true});
+    document.getElementById('freqSlider').addEventListener('touchstart', function(e) { e.stopPropagation(); }, {passive: true});
+
+    // 窗口resize（含捏合缩放松手后触发）
+    window.addEventListener('resize', handleResize);
+
+    // 监听 visualViewport 变化（iOS捏合缩放实时响应）
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleResize);
+    }
+
     drawWave();
   })();
 </script>
