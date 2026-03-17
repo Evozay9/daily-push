@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=4.0, user-scalable=yes" />
+  <title>音频小知识 · 第02期 · 我们能听见什么？</title>
+  <style>
+    :root {
+      --bg: #0f0f14; --card: #1a1a24; --card2: #22222f;
+      --accent: #7c5cfc; --accent2: #fc5c7d; --accent3: #5cf8d8;
+      --text: #e8e8f0; --muted: #8888aa; --border: #2e2e42;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 0 0 100px; overflow-x: hidden; }
+    .hero { background: linear-gradient(135deg,#1a0a2e 0%,#0d1a2e 50%,#0a2020 100%); padding: 60px 24px 50px; text-align: center; position: relative; overflow: hidden; }
+    .hero::before { content:''; position:absolute; width:500px; height:500px; border-radius:50%; background:radial-gradient(circle,rgba(124,92,252,0.15) 0%,transparent 70%); top:-100px; left:50%; transform:translateX(-50%); pointer-events:none; }
+    .tag { display:inline-block; background:rgba(124,92,252,0.2); border:1px solid rgba(124,92,252,0.5); color:#a98bff; font-size:12px; letter-spacing:2px; padding:4px 14px; border-radius:20px; margin-bottom:20px; text-transform:uppercase; }
+    .hero h1 { font-size:clamp(26px,6vw,48px); font-weight:800; line-height:1.2; margin-bottom:16px; background:linear-gradient(90deg,#a98bff,#fc5c7d,#5cf8d8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .hero .subtitle { font-size:16px; color:var(--muted); max-width:520px; margin:0 auto; line-height:1.7; }
+    .episode-badge { position:absolute; top:24px; right:24px; background:rgba(255,255,255,0.07); border:1px solid var(--border); padding:6px 14px; border-radius:8px; font-size:13px; color:var(--muted); }
+    .container { max-width:800px; margin:0 auto; padding:0 20px; }
+    .section { margin-top:40px; }
+    .section-label { font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+    .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:28px 24px; margin-bottom:16px; }
+    .card h2 { font-size:20px; margin-bottom:14px; color:#fff; }
+    .card p { font-size:15px; line-height:1.85; color:#c8c8dc; }
+    .card p + p { margin-top:12px; }
+    .analogy { background:linear-gradient(135deg,rgba(124,92,252,0.12),rgba(92,248,216,0.08)); border-left:3px solid var(--accent); border-radius:0 12px 12px 0; padding:16px 20px; margin:16px 0; font-size:15px; line-height:1.8; color:#d8d8f0; }
+    .analogy strong { color:#b8a0ff; }
+    .kw { display:inline-block; background:rgba(252,92,125,0.15); border:1px solid rgba(252,92,125,0.3); color:#ff8fab; padding:1px 8px; border-radius:6px; font-size:0.9em; }
+    .kw2 { display:inline-block; background:rgba(92,248,216,0.12); border:1px solid rgba(92,248,216,0.25); color:#5cf8d8; padding:1px 8px; border-radius:6px; font-size:0.9em; }
+    .info-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-top:16px; }
+    .info-box { background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:18px 16px; text-align:center; }
+    .info-box .icon { font-size:28px; margin-bottom:8px; }
+    .info-box .label { font-size:13px; color:var(--muted); margin-bottom:6px; }
+    .info-box .value { font-size:17px; font-weight:700; color:#fff; }
+    .info-box .desc { font-size:12px; color:var(--muted); margin-top:4px; line-height:1.5; }
+    .pill-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+    .pill { background:rgba(124,92,252,0.15); border:1px solid rgba(124,92,252,0.3); padding:6px 16px; border-radius:20px; font-size:13px; color:#b0a0ff; }
+    .footer { text-align:center; margin-top:60px; padding-top:30px; border-top:1px solid var(--border); color:var(--muted); font-size:13px; line-height:2; }
+    .next-hint { display:inline-block; margin-top:16px; background:rgba(92,248,216,0.1); border:1px solid rgba(92,248,216,0.25); color:#5cf8d8; padding:8px 20px; border-radius:20px; font-size:13px; }
+    .next-lesson-bar { position:fixed; bottom:0; left:0; right:0; z-index:999; background:linear-gradient(to top,rgba(15,15,20,0.98) 60%,transparent); padding:16px 20px 24px; pointer-events:none; }
+    .next-lesson-inner { max-width:800px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; background:rgba(26,26,36,0.95); border:1px solid rgba(124,92,252,0.35); border-radius:18px; padding:14px 20px; pointer-events:all; box-shadow:0 8px 32px rgba(0,0,0,0.5); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+    .next-lesson-label { font-size:13px; color:var(--muted); margin-bottom:2px; }
+    .next-lesson-desc { font-size:14px; color:var(--text); font-weight:500; }
+    .next-lesson-btn { flex-shrink:0; background:linear-gradient(135deg,var(--accent),var(--accent2)); border:none; border-radius:12px; padding:12px 22px; color:#fff; font-size:15px; font-weight:700; cursor:pointer; transition:transform 0.15s,opacity 0.15s; font-family:inherit; white-space:nowrap; }
+    .next-lesson-btn:active { transform:scale(0.95); }
+    .next-lesson-btn.sent { background:linear-gradient(135deg,#2a8a4a,#1a6a3a); cursor:default; }
+    @media(max-width:480px){.card{padding:20px 16px;}}
+  </style>
+</head>
+<body>
+<div class="hero">
+  <div class="episode-badge">第 02 期 · 声学基础</div>
+  <div class="tag">音频小知识</div>
+  <h1>我们能听见什么？</h1>
+  <p class="subtitle">人耳的频率范围与可闻声、次声、超声</p>
+</div>
+<div class="container">
+
+  <div class="section">
+    <div class="section-label">01 · 你的耳朵能听多高多低</div>
+    <div class="card">
+      <h2>人耳的可听范围：20Hz 到 20000Hz</h2>
+      <p>健康的年轻人耳朵大约能听到 <span class="kw">20Hz</span> 到 <span class="kw2">20,000Hz（20kHz）</span> 之间的声音。</p>
+      <p>20Hz 是你手掌放在低音炮上感受到的那种「震动」——你已经快感觉不到它是「声音」了，更像是压力。</p>
+      <p>20kHz 是蚊子翅膀扇动的声音，大多数30岁以上的人已经听不到这个频率了。</p>
+      <div class="analogy"><strong>把可听范围想成一架钢琴的键盘。</strong><br>人类的钢琴有88个键，最低的A0约27Hz，最高的C8约4186Hz——这些都在人耳范围内。<br>而蝙蝠、海豚发出的超声波，相当于钢琴键盘右边还有好几排键，人类根本看不见那里。</div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-label">02 · 次声波：你听不见但能感受到</div>
+    <div class="card">
+      <h2>低于20Hz：次声波的世界</h2>
+      <p>次声波（<span class="kw">Infrasound</span>）是频率低于20Hz的声波，人耳听不见，但身体能感受到。</p>
+      <p>大型动物如大象、鲸鱼用次声波进行长距离通信——因为次声波能传播数千公里不衰减。</p>
+      <p>地震、火山喷发、核爆都会产生强烈次声波，科学家用它来监测这些事件。</p>
+      <p>有研究认为，某些「闹鬼」现象其实是建筑物共振产生18Hz左右的次声波，导致人产生不安、恶心、视觉模糊等感受。</p>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-label">03 · 超声波：医院和动物都在用</div>
+    <div class="card">
+      <h2>高于20kHz：超声波的应用</h2>
+      <p>超声波（<span class="kw2">Ultrasound</span>）频率超过20kHz，人耳无法察觉。</p>
+      <p>蝙蝠发出超声波，通过回声判断前方障碍物位置和距离——每秒可以发射200次脉冲，精度达毫米级。</p>
+      <p>医学B超使用1MHz到20MHz的超声波穿透人体，回声成像。频率越高，分辨率越高，但穿透深度越浅。</p>
+      <p>工业超声波清洗机用高频振动把污垢从细小缝隙里「震」出来，连牙刷刷不到的地方都能清洁。</p>
+      <div class="analogy"><strong>超声波就像「看不见的光」。</strong><br>可见光波长400-700纳米，紫外线、X射线比可见光「频率更高」但你看不见。<br>超声波与可听声的关系完全类似——频率更高，超过人耳感知范围，但物理上完全存在。</div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-label">关键数据</div>
+    <div class="info-row">
+      <div class="info-box">
+        <div class="icon">🔉</div>
+        <div class="label">人耳低频极限</div>
+        <div class="value">20 Hz</div>
+        <div class="desc">低于此为次声波<br>感受到振动而非声音</div>
+      </div>
+      <div class="info-box">
+        <div class="icon">🔊</div>
+        <div class="label">人耳高频极限</div>
+        <div class="value">20 kHz</div>
+        <div class="desc">随年龄下降<br>30岁约15kHz</div>
+      </div>
+      <div class="info-box">
+        <div class="icon">🦇</div>
+        <div class="label">蝙蝠感知范围</div>
+        <div class="value">1k–200kHz</div>
+        <div class="desc">远超人耳<br>用于精准定位</div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-label">本期总结</div>
+    <div class="card">
+      <h2>今天学了什么</h2>
+      <div class="pill-row"><span class="pill">次声波 <20Hz</span><span class="pill">可听声 20Hz–20kHz</span><span class="pill">超声波 >20kHz</span><span class="pill">随年龄高频衰减</span><span class="pill">蝙蝠用超声导航</span></div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="next-hint">📅 下期：分贝是什么？为什么摇滚演唱会会损伤听力</div>
+  </div>
+
+  <div class="next-lesson-bar" id="nextLessonBar">
+    <div class="next-lesson-inner">
+      <div class="next-lesson-left">
+        <div class="next-lesson-label">学完了？</div>
+        <div class="next-lesson-desc">告诉我，我来提前推送下一课 👇</div>
+      </div>
+      <button class="next-lesson-btn" id="nextLessonBtn" onclick="requestNextLesson()">
+        <span id="btnText">下一课 →</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    var COURSE_TYPE = 'audio';
+    var COURSE_NUM  = 2;
+    var storageKey = 'next_requested_' + COURSE_TYPE + '_' + COURSE_NUM;
+    if (localStorage.getItem(storageKey)) { markSent(); }
+
+    function markSent() {
+      var btn = document.getElementById('nextLessonBtn');
+      var desc = document.querySelector('.next-lesson-desc');
+      if (btn) { btn.classList.add('sent'); btn.disabled = true; document.getElementById('btnText').textContent = '✓ 已发送'; }
+      if (desc) desc.textContent = '收到！下一课正在准备中 🎉';
+    }
+
+    window.requestNextLesson = function() {
+      var btn = document.getElementById('nextLessonBtn');
+      if (btn && btn.disabled) return;
+      localStorage.setItem(storageKey, Date.now().toString());
+      markSent();
+      // 信号通过 fetch 发到 GitHub Issue（WorkBuddy automation 读取）
+      fetch('https://api.github.com/repos/PLACEHOLDER_OWNER/PLACEHOLDER_REPO/issues', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Authorization': 'token PLACEHOLDER_TOKEN'},
+        body: JSON.stringify({
+          title: '[NEXT_LESSON] audio #02',
+          body: JSON.stringify({type:'audio',num:2,ts:new Date().toISOString()}),
+          labels: ['next-lesson-request']
+        })
+      }).catch(function(){});
+    };
+  })();
+</script>
+</body>
+</html>
