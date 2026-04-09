@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>武汉江夏 04月10日 天气</title>
+<style>
+  :root {
+    --bg1: #0d1b2a;
+    --bg2: #1a2e45;
+    --bg3: #112240;
+    --glass: rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.12);
+    --accent: #64b5f6;
+    --accent2: #81d4fa;
+    --text: #e8f4fd;
+    --text-sub: rgba(232,244,253,0.55);
+    --green: #4ade80;
+    --yellow: #facc15;
+    --orange: #fb923c;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Noto Sans SC', 'SF Pro Display', sans-serif;
+    background: var(--bg1);
+    min-height: 100vh;
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── 背景星点装饰 ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(41,98,255,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 80%, rgba(0,188,212,0.14) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 40% at 60% 20%, rgba(103,58,183,0.10) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative; z-index: 1;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+  }
+
+  /* ── 顶部：地点 + 时间 ── */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .location {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-sub);
+    letter-spacing: 0.5px;
+  }
+  .location span { color: var(--accent); }
+  .update-time {
+    font-size: 12px;
+    color: var(--text-sub);
+    text-align: right;
+  }
+
+  /* ── 主温度卡 ── */
+  .main-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 28px 24px 24px;
+    margin-bottom: 14px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+  }
+  .main-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(100,181,246,0.12) 0%, transparent 70%);
+  }
+  .date-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .date-text {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .weekday {
+    font-size: 14px;
+    color: var(--accent);
+    background: rgba(100,181,246,0.12);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  .temp-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 4px;
+  }
+  .big-emoji {
+    font-size: 64px;
+    line-height: 1;
+    filter: drop-shadow(0 4px 12px rgba(255,255,255,0.15));
+  }
+  .temp-block {}
+  .main-temp {
+    font-size: 82px;
+    font-weight: 200;
+    line-height: 1;
+    color: var(--text);
+    letter-spacing: -4px;
+  }
+  .main-temp sup {
+    font-size: 32px;
+    font-weight: 300;
+    vertical-align: super;
+    letter-spacing: 0;
+  }
+  .weather-desc {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--accent2);
+    margin-top: 4px;
+  }
+
+  .sub-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .sub-item {
+    font-size: 13px;
+    color: var(--text-sub);
+  }
+  .sub-item strong { color: var(--text); font-weight: 500; }
+
+  /* ── 分割线 ── */
+  .divider {
+    height: 1px;
+    background: var(--glass-border);
+    margin: 14px 0;
+  }
+
+  /* ── 实况指标网格 ── */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .metric-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    padding: 16px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .metric-icon {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  .metric-label {
+    font-size: 11px;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 4px;
+  }
+  .metric-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .metric-sub {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 2px;
+  }
+
+  /* ── 日出日落条 ── */
+  .sun-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .sun-item {
+    text-align: center;
+  }
+  .sun-icon { font-size: 24px; }
+  .sun-label { font-size: 11px; color: var(--text-sub); margin: 4px 0 2px; letter-spacing: 0.5px; }
+  .sun-time { font-size: 17px; font-weight: 600; color: var(--text); }
+  .sun-sep { width: 1px; height: 40px; background: var(--glass-border); }
+
+  /* ── 逐时预报 ── */
+  .section-title {
+    font-size: 12px;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .hourly-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-bottom: 14px;
+  }
+  .hourly-scroll::-webkit-scrollbar { display: none; }
+  .hourly-track {
+    display: flex;
+    gap: 8px;
+    padding-bottom: 4px;
+    width: max-content;
+  }
+  .hour-item {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 12px 14px;
+    text-align: center;
+    min-width: 64px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .h-time { font-size: 12px; color: var(--text-sub); margin-bottom: 6px; }
+  .h-emoji { font-size: 22px; margin-bottom: 6px; }
+  .h-temp { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .h-rain { font-size: 11px; color: #7dd3fc; }
+
+  /* ── 未来天气 ── */
+  .forecast-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .forecast-item {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .fc-day {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    min-width: 48px;
+  }
+  .fc-date {
+    display: block;
+    font-size: 11px;
+    color: var(--text-sub);
+    font-weight: 400;
+    margin-top: 1px;
+  }
+  .fc-emoji { font-size: 26px; }
+  .fc-desc {
+    flex: 1;
+    font-size: 14px;
+    color: var(--text-sub);
+  }
+  .fc-temp {
+    font-size: 15px;
+    color: var(--text-sub);
+    white-space: nowrap;
+  }
+  .fc-temp strong { color: var(--text); }
+  .fc-sep { opacity: 0.4; }
+
+  /* ── 底部水印 ── */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(232,244,253,0.25);
+    padding-top: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="location">📍 <span>武汉 · 江夏</span></div>
+    <div class="update-time">07:30 更新</div>
+  </div>
+
+  <!-- 主温度卡 -->
+  <div class="main-card">
+    <div class="date-row">
+      <div class="date-text">04月10日</div>
+      <div class="weekday">周五</div>
+    </div>
+    <div class="temp-row">
+      <div class="big-emoji">🌙</div>
+      <div class="temp-block">
+        <div class="main-temp">17<sup>°</sup></div>
+        <div class="weather-desc">晴朗</div>
+      </div>
+    </div>
+    <div class="sub-row">
+      <div class="sub-item">体感 <strong>17°</strong></div>
+      <div class="sub-item">最低 <strong>18°</strong></div>
+      <div class="sub-item">最高 <strong>28°</strong></div>
+    </div>
+  </div>
+
+  <!-- 实况指标 2x2 -->
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-icon">💧</div>
+      <div class="metric-label">湿度</div>
+      <div class="metric-value">100%</div>
+      <div class="metric-sub">潮湿</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon">💨</div>
+      <div class="metric-label">风速</div>
+      <div class="metric-value">6<small style="font-size:12px;font-weight:400"> km/h</small></div>
+      <div class="metric-sub">东偏南风 · 微风</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon">👁️</div>
+      <div class="metric-label">能见度</div>
+      <div class="metric-value">5<small style="font-size:12px;font-weight:400"> km</small></div>
+      <div class="metric-sub">一般</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon">☀️</div>
+      <div class="metric-label">紫外线</div>
+      <div class="metric-value" style="color:#4ade80">UV 0</div>
+      <div class="metric-sub">低</div>
+    </div>
+  </div>
+
+  <!-- 日出日落 -->
+  <div class="sun-card">
+    <div class="sun-item">
+      <div class="sun-icon">🌅</div>
+      <div class="sun-label">日出</div>
+      <div class="sun-time">06:02 AM</div>
+    </div>
+    <div class="sun-sep"></div>
+    <div class="sun-item">
+      <div class="sun-icon">🌇</div>
+      <div class="sun-label">日落</div>
+      <div class="sun-time">06:47 PM</div>
+    </div>
+  </div>
+
+  <!-- 逐时预报 -->
+  <div class="section-title">今日逐时预报</div>
+  <div class="hourly-scroll">
+    <div class="hourly-track">
+        <div class="hour-item">
+          <div class="h-time">06:00</div>
+          <div class="h-emoji">🌙</div>
+          <div class="h-temp">18°</div>
+          <div class="h-rain" style="opacity:0.3">🌧 0%</div>
+        </div>
+        <div class="hour-item">
+          <div class="h-time">09:00</div>
+          <div class="h-emoji">☁️</div>
+          <div class="h-temp">22°</div>
+          <div class="h-rain" style="opacity:0.3">🌧 0%</div>
+        </div>
+        <div class="hour-item">
+          <div class="h-time">12:00</div>
+          <div class="h-emoji">☁️</div>
+          <div class="h-temp">26°</div>
+          <div class="h-rain" style="opacity:0.3">🌧 0%</div>
+        </div>
+        <div class="hour-item">
+          <div class="h-time">15:00</div>
+          <div class="h-emoji">⛅</div>
+          <div class="h-temp">28°</div>
+          <div class="h-rain" style="opacity:0.3">🌧 0%</div>
+        </div>
+        <div class="hour-item">
+          <div class="h-time">18:00</div>
+          <div class="h-emoji">⛅</div>
+          <div class="h-temp">27°</div>
+          <div class="h-rain" style="opacity:0.3">🌧 0%</div>
+        </div>
+        <div class="hour-item">
+          <div class="h-time">21:00</div>
+          <div class="h-emoji">🌙</div>
+          <div class="h-temp">24°</div>
+          <div class="h-rain" style="opacity:0.3">🌧 0%</div>
+        </div>
+    </div>
+  </div>
+
+  <!-- 未来两天 -->
+  <div class="section-title">未来天气</div>
+  <div class="forecast-list">
+        <div class="forecast-item">
+          <div class="fc-day">周六<span class="fc-date">04/11</span></div>
+          <div class="fc-emoji">☁️</div>
+          <div class="fc-desc">阴沉</div>
+          <div class="fc-temp">19° <span class="fc-sep">~</span> <strong>21°</strong></div>
+        </div>
+        <div class="forecast-item">
+          <div class="fc-day">周日<span class="fc-date">04/12</span></div>
+          <div class="fc-emoji">🌦️</div>
+          <div class="fc-desc">局部小雨</div>
+          <div class="fc-temp">17° <span class="fc-sep">~</span> <strong>19°</strong></div>
+        </div>
+  </div>
+
+  <div class="footer">数据来源 wttr.in · 07:30 更新</div>
+</div>
+</body>
+</html>
